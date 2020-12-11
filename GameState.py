@@ -9,8 +9,8 @@ class GameState(object):
         self.game_state = res
         self.turns_left = res['turn']
         self.map = Map(res)
-        self.self_info = PlayerInfo(res, player1=res['player1']['id'] == playerId)
-        self.other_info = PlayerInfo(res, player1=res['player1']['id'] != playerId)
+        self.self_info = PlayerInfo(res, player1=res['nextPlayerObject'])
+        self.other_info = PlayerInfo(res, player1=res['otherPlayerObject'])
         self.state_of_mind = {}
         self.state_of_mind["TieTurns"] = 0
         self.state_of_mind["Peaceful"] = False
@@ -22,7 +22,8 @@ class GameState(object):
         
         for tile in report['map']['tiles']:
             if bool(tile):
+                
                 x = tile['x']
                 y = tile['y']
                 pos = y*report['map']*width + x
-                self.map[pos] = tile
+                self.map['tiles'][pos] = tile

@@ -22,12 +22,10 @@
 class PlayerInfo(object):
     def __init__(self, res, player1):
         # TODO (djokjulapfe): nisam siguran kako ovo player1/2 radi
-        if player1:
-            self.player_info = res["player1"]
-        else:
-            self.player_info = res["player2"]
-        self.x = self.player_info['x']
-        self.y = self.player_info['y']
+        self.player_info = player1
+        if bool(player1):
+            self.x = self.player_info['x']
+            self.y = self.player_info['y']
 
     def get_space_left(self):
         res = self.player_info["resources"]
