@@ -1,27 +1,25 @@
 import Map
 from utils import *
+import actions
 
-def dist_tuple(pos1: (int, int), pos2: (int, int)):
-    return dist(pos1[0], pos1[1], pos2[0], pos2[1])
-
-def get_all_non_digged(map: Map, currpos: (int, int)):
+def get_all_non_digged(map: Map, currpos):
     tiles = []
     for x in range(map.width):
         for y in range(map.height):
-            if 'tileType' in map.tiles[x][y] \
-                    and map.tiles[x][y]['tileType'] == "DIGTILE" \
-                    and map.tiles[x][y]["dug"] == False:
+            if 'tileType' in map.tiles[y][x] \
+                    and map.tiles[y][x]['tileType'] == "DIGTILE" \
+                    and map.tiles[y][x]["dug"] == False:
                 tiles.append((x,y))
 
-    tiles = sorted(tiles, key=lambda digtile: dist_tuple(currpos, digtile))
+    tiles = sorted(tiles, key=lambda digtile: dist(currpos.x, currpos.y, digtile[0], digtile[1]))
     return tiles
 
-def get_discovery_tiles_per_direction(map:Map, currpos: (int,int)):
+def get_discovery_tiles_per_direction(map:Map, currpos):
     sol = {}
-    sol['w'] = calc_new_tiles(map, (currpos[0], currpos[1]-1))
-    sol['s'] = calc_new_tiles(map, (currpos[0], currpos[1]+1))
-    sol['a'] = calc_new_tiles(map, (currpos[0]-1, currpos[1]))
-    sol['d'] = calc_new_tiles(map, (currpos[0]+1, currpos[1]))
+    sol[actions.up()] = calc_new_tiles(map, (currpos.x, currpos.y-1))
+    sol[actions.down()] = calc_new_tiles(map, (currpos.x, currpos.y+1))
+    sol[actions.left()] = calc_new_tiles(map, (currpos.x-1, currpos.y))
+    sol[actions.right()] = calc_new_tiles(map, (currpos.x+1, currpos.y))
     return sol
 
 def calc_new_tiles(map: Map, pos: (int,int)):
@@ -34,7 +32,7 @@ def calc_new_tiles(map: Map, pos: (int,int)):
                 continue
             newx = pos[0] + xi
             newy = pos[1] + yi
-            if within_bounds(map, (newx, newy)) and 'tileType' not in map.tiles[newx][newy]:
+            if within_bounds(map, (newx, newy)) and 'tileType' not in map.tiles[newy][newx]:
                 new_tile_cnt += 1
     return new_tile_cnt
 

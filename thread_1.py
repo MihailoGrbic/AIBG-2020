@@ -2,7 +2,7 @@ from GamePlay import GamePlay
 from BotGoTo import BotGoTo as Bot
 from Client import get
 
-gameId = 7
+gameId = 8
 playerOne = 0
 playerTwo = 1
 
