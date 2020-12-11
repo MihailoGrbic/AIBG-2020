@@ -3,7 +3,7 @@ import utils
 from PlayerInfo import PlayerInfo
 
 
-class BhvrWalker(Bot):
+class BehaviourWalker(Bot):
 
     def __init__(self, x=-1, y=-1):
         self.x_sel = x

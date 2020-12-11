@@ -9,7 +9,7 @@ from utils import actions
 
 
 
-class Bhvr(object):
+class Behaviour(object):
 
     def play_single_turn(self, current_game_state: GameState):
         pass

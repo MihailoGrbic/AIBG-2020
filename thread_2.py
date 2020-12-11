@@ -1,12 +1,11 @@
-from GamePlaySingleBot import GamePlaySingleBot
-from BotRandom import BotRandom
-from Client import get
+from GamePlay import GamePlay
+from BotKeyboard import BotKeyboard
 
 gameId = 0
 playerOne = 0
 playerTwo = 1
 
-gamePlay = GamePlaySingleBot('http://localhost:9080', gameId, playerTwo, BotBuildSwordAndAttackWithRunaway(500))
+gamePlay = GamePlay('http://localhost:9080', gameId, playerTwo, BotKeyboard())
 
 gamePlay.play()
 

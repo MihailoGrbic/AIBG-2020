@@ -3,7 +3,6 @@ from GameState import GameState
 from Map import Map
 from PlayerInfo import PlayerInfo
 import pprint
-from InteligenceUtil import *
 from utils import actions
 
 class Bot(object):
