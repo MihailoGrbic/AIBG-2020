@@ -11,17 +11,16 @@ class GameState(object):
         self.map = Map(res)
         self.self_info = PlayerInfo(res, player1=res['nextPlayerObject'])
         self.other_info = PlayerInfo(res, player1=res['otherPlayerObject'])
-        self.state_of_mind = {}
-        self.state_of_mind["TieTurns"] = 0
-        self.state_of_mind["Peaceful"] = False
-        self.state_of_mind["OpponentResources"] = 0
-        self.state_of_mind["LastMoveWasStupid"] = False
-        self.state_of_mind["AllSelfHealthDiff"] = 0
+        self.opponent_visible = False
 
     def update_game_state(self, report):
 
         self.self_info = PlayerInfo(report, player1=report['nextPlayerObject'])
-        self.other_info = PlayerInfo(report, player1=report['otherPlayerObject']) 
+        if bool(report['otherPlayerObject']):
+            self.other_info = PlayerInfo(report, player1=report['otherPlayerObject'])
+            self.opponent_visible = True
+        else:
+            self.opponent_visible = False
 
         for row in report['map']['tiles']:
             for tile in row:
@@ -29,3 +28,9 @@ class GameState(object):
                     x = tile['x']
                     y = tile['y']
                     self.map.tiles[y][x] = tile
+
+                    # if bool(tile['trap']):
+                    #     r_x, r_y = Map.reverse_corr(x, y)
+                    #     self.map.tiles[r_y][r_x] = tile
+                    #     self.map.tiles[r_y][r_x]['x'] = r_x
+                    #     self.map.tiles[r_y][r_x]['y'] = r_y
