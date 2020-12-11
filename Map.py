@@ -6,3 +6,8 @@ class Map(object):
         self.tiles = res['tiles']
 
         self.items = []
+
+    def reverse_corr(x, y):
+        r_x = self.width - x - 1
+        r_y = self.height - y - 1
+        return r_x, r_y

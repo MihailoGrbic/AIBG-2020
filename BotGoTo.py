@@ -1,6 +1,7 @@
 from Bot import Bot
 from GameState import GameState
-from utils import actions, astar, move_once
+from utils import astar, move_once
+import actions
 
 
 class BotGoTo(Bot):

@@ -30,7 +30,3 @@ class PlayerInfo(object):
             self.x = -1
             self.y = -1
 
-    def get_space_left(self):
-        res = self.player_info["resources"]
-        return 5 - (res["WOOD"] + res["METAL"] + res["STONE"])
-
