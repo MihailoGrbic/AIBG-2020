@@ -29,8 +29,9 @@ class GameState(object):
                     y = tile['y']
                     self.map.tiles[y][x] = tile
 
-                    if tile['tileType'] == 'NORMALTILE' and bool(tile['trap']) and tile['trap']['visible']:
-                        r_x, r_y = self.map.reverse_corr(x, y)
-                        self.map.tiles[r_y][r_x] = tile
-                        self.map.tiles[r_y][r_x]['x'] = r_x
-                        self.map.tiles[r_y][r_x]['y'] = r_y
+                    if 'trap' in tile and bool(tile['trap']):
+                        if tile['trap']['visible']:
+                            r_x, r_y = Map.reverse_corr(x, y)
+                            self.map.tiles[r_y][r_x] = tile
+                            self.map.tiles[r_y][r_x]['x'] = r_x
+                            self.map.tiles[r_y][r_x]['y'] = r_y
