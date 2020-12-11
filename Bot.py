@@ -3,7 +3,7 @@ from GameState import GameState
 from Map import Map
 from PlayerInfo import PlayerInfo
 import pprint
-from utils import actions
+import actions
 
 class Bot(object):
 
@@ -18,3 +18,5 @@ class Bot(object):
             if policy.should_execute(current_game_state):
                 return policy.bhvr
         return None
+
+

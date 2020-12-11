@@ -3,19 +3,6 @@ from Map import Map
 from PlayerInfo import PlayerInfo
 from pprint import pprint
 
-actions = {
-
-    # moving
-    "DOWN": "s",
-    "UP": "w",
-    "LEFT": "a",
-    "RIGHT": "d",
-
-    # others
-    "DIG": "dig"
-
-}
-
 
 def dist(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
