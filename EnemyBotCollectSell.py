@@ -4,11 +4,10 @@ from utils2 import *
 from utils import *
 import actions
 
-class BotCollectSell(Bot):
+class EnemyBotCollectSell(Bot):
     def play_single_turn(self, current_game_state: GameState):
 
         self_info = current_game_state.self_info
-        #self_pos = (self_info.y, self_info.x)
 
         curr_tile = current_game_state.map.tiles[self_info.y][self_info.x]
 
