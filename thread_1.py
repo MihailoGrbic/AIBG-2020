@@ -1,5 +1,5 @@
 from GamePlay import GamePlay
-from BotRandom import BotRandom
+from BotGoTo import BotGoTo as Bot
 from Client import get
 
 gameId = 0
@@ -11,6 +11,6 @@ get("http://localhost:9080/admin/createGame?gameId=" + str(gameId) +
     "&playerTwo=" + str(playerTwo) +
     "&mapName=trialMap")
 
-gamePlay = GamePlay('http://localhost:9080', gameId, playerOne, BotRandom)
+gamePlay = GamePlay('http://localhost:9080', gameId, playerOne, Bot(20, 20))
 
 gamePlay.play()
