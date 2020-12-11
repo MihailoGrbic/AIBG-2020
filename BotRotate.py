@@ -17,4 +17,5 @@ class BotRotate(Bot):
             return actions.up()
         if self.counter == 2:
             return actions.right()
-        return actions.down()
+        if self.counter == 3:
+            return actions.down()
