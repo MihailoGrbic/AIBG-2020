@@ -1,4 +1,6 @@
 .DS_Store
 .idea
-*.pyc
 thread_1.py
+thread_2.py
+__pycache__
+

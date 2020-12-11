@@ -26,6 +26,9 @@ class PlayerInfo(object):
         if bool(player1):
             self.x = self.player_info['x']
             self.y = self.player_info['y']
+        else:
+            self.x = -1
+            self.y = -1
 
     def get_space_left(self):
         res = self.player_info["resources"]
