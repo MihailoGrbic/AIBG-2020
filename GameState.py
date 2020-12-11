@@ -18,7 +18,7 @@ class GameState(object):
         self.state_of_mind["LastMoveWasStupid"] = False
         self.state_of_mind["AllSelfHealthDiff"] = 0
 
-    def update_game_state(report):
+    def update_game_state(self, report):
         
         for tile in report['map']['tiles']:
             if bool(tile):

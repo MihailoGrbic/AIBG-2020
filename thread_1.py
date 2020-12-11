@@ -11,6 +11,6 @@ get("http://localhost:9080/admin/createGame?gameId=" + str(gameId) +
     "&playerTwo=" + str(playerTwo) +
     "&mapName=trialMap")
 
-gamePlay = GamePlay('http://localhost:9080', gameId, playerOne, BotRandom)
+gamePlay = GamePlay('http://localhost:9080', gameId, playerOne, BotRandom())
 
 gamePlay.play()

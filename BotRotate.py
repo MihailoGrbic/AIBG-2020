@@ -1,6 +1,6 @@
 from Bot import Bot
 from GameState import GameState
-from utils import actions
+import actions
 
 
 class BotRotate(Bot):
@@ -12,10 +12,10 @@ class BotRotate(Bot):
         self.counter += 1
         self.counter %= 4
         if self.counter == 0:
-            return actions["LEFT"]
+            return actions.left()
         if self.counter == 1:
-            return actions["UP"]
+            return actions.up()
         if self.counter == 2:
-            return actions["RIGHT"]
+            return actions.right()
         if self.counter == 3:
-            return actions["DOWN"]
+            return actions.down()
