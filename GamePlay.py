@@ -27,7 +27,7 @@ class GamePlay(object):
 
     def play(self):
         while True:
-            action = self.bot.play_single_turn(self.game_state)
+            action = self.bot.play_single_turn(current_game_state= self.game_state)
             self.doAction(action)
 
     def connect(self):
