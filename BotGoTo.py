@@ -1,6 +1,6 @@
 from Bot import Bot
 from GameState import GameState
-from utils import actions, astar
+from utils import actions, astar, move_once
 
 
 class BotGoTo(Bot):
@@ -10,14 +10,5 @@ class BotGoTo(Bot):
         self.y = y
 
     def play_single_turn(self, current_game_state: GameState):
-        self_info = current_game_state.self_info.player_info
-        path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), (self.x, self.y))
-        x_diff = path[1][0] - self_info.x
-        y_diff = path[1][1] - self_info.y
-        if x_diff == 1:
-            return actions["RIGHT"]
-        if x_diff == -1:
-            return actions["LEFT"]
-        if y_diff == 1:
-            return actions["DOWN"]
-        return actions["UP"]
+        return move_once(current_game_state, target=(self.x, self.y))
+

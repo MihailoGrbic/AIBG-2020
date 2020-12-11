@@ -9,8 +9,8 @@ import random
 
 
 class Policy:
-    def __init__(self, bhvr: bhvr):
-        self.bhvr = bhvr
+    def __init__(self, bot: bot):
+        self.bot = bot
 
     def should_execute(self, current_game_state: GameState):
         pass
@@ -20,5 +20,9 @@ class PolicyAlwaysAllow(Policy):
     def should_execute(self, current_game_state: GameState):
         print("PolicyAlwaysAllow " + str(True))
         return True
+
+class EnemyFound(Policy):
+    def should_execute(self, current_game_state: GameState):
+        return GameState.enemy_visible
 
 
