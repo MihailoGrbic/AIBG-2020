@@ -11,12 +11,18 @@ actions = {
     "LEFT": "a",
     "RIGHT": "d",
 
+    # others
+    "DIG": "dig"
+
 }
+
+
 def dist(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
 def move_available(current_map: Map, other_player: PlayerInfo, x, y):
+    # TODO: Check how we store unpassable data
     return 0 <= x < current_map.width and 0 <= y < current_map.height and current_map.tiles[y][x]['item'] is None \
            and (other_player.x != x or other_player.y != y)
 
@@ -141,7 +147,6 @@ def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x
         if diff[0] == 1:
             path_wasd.append('d')
     return path_wasd
-
 
 
 def direction(pos1: tuple, pos2: tuple) -> str:
