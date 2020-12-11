@@ -2,7 +2,6 @@ from Bot import Bot
 from GameState import GameState
 import actions
 
-
 class BotRotate(Bot):
 
     def __init__(self):

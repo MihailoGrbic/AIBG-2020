@@ -1,17 +1,19 @@
 import Map
-import utils
+from utils import *
 
-def dist(pos1: (int, int), pos2: (int, int)):
+def dist_tuple(pos1: (int, int), pos2: (int, int)):
     return dist(pos1[0], pos1[1], pos2[0], pos2[1])
 
 def get_all_non_digged(map: Map, currpos: (int, int)):
     tiles = []
     for x in range(map.width):
         for y in range(map.height):
-            if map[x][y]['tileType'] == "DIGTILE" and map[x][y]["dug"] == False:
+            if 'tileType' in map.tiles[x][y] \
+                    and map.tiles[x][y]['tileType'] == "DIGTILE" \
+                    and map.tiles[x][y]["dug"] == False:
                 tiles.append((x,y))
 
-    tiles = sorted(tiles, key=lambda digtile: dist(currpos, digtile))
+    tiles = sorted(tiles, key=lambda digtile: dist_tuple(currpos, digtile))
     return tiles
 
 def get_discovery_tiles_per_direction(map:Map, currpos: (int,int)):
@@ -32,7 +34,7 @@ def calc_new_tiles(map: Map, pos: (int,int)):
                 continue
             newx = pos[0] + xi
             newy = pos[1] + yi
-            if within_bounds(map, (newx, newy)) and 'tileType' not in map[xi][yi]:
+            if within_bounds(map, (newx, newy)) and 'tileType' not in map.tiles[newx][newy]:
                 new_tile_cnt += 1
     return new_tile_cnt
 
