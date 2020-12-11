@@ -34,7 +34,7 @@ class GamePlay(object):
         print('{0}/doAction?playerId={1}&gameId={2}&action={3}'.format(
             self.url, self.playerId, self.gameId, a))
 
-        self.update_data(res)
+        self.current_game_state.update_game_state(res)
         ss = self.current_game_state.self_info
         print("self player " + str(ss.x) + " " + str(ss.y))
 

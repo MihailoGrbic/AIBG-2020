@@ -17,3 +17,12 @@ class GameState(object):
         self.state_of_mind["OpponentResources"] = 0
         self.state_of_mind["LastMoveWasStupid"] = False
         self.state_of_mind["AllSelfHealthDiff"] = 0
+
+    def update_game_state(report):
+        
+        for tile in report['map']['tiles']:
+            if bool(tile):
+                x = tile['x']
+                y = tile['y']
+                pos = y*report['map']*width + x
+                self.map[pos] = tile
