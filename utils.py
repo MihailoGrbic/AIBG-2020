@@ -2,6 +2,7 @@ from PlayerInfo import PlayerInfo
 from Map import Map
 from PlayerInfo import PlayerInfo
 from pprint import pprint
+import actions
 
 
 def dist(x1, y1, x2, y2):

@@ -2,7 +2,7 @@ from GamePlay import GamePlay
 from BotRotate import BotRotate as Bot
 from EnemyBotCollectSell import EnemyBotCollectSell
 
-gameId = 8
+gameId = 9
 playerOne = 0
 playerTwo = 1
 

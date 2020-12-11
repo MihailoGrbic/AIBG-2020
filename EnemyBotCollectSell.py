@@ -1,6 +1,5 @@
 from Bot import Bot
 from GameState import GameState
-from utils2 import *
 from utils import *
 import actions
 
