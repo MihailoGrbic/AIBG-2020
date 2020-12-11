@@ -20,9 +20,12 @@ class GameState(object):
 
     def update_game_state(self, report):
 
+        self.self_info = PlayerInfo(report, player1=res['nextPlayerObject'])
+        self.other_info = PlayerInfo(report, player1=res['otherPlayerObject']) 
+
         for row in report['map']['tiles']:
             for tile in row:
                 if bool(tile):
                     x = tile['x']
                     y = tile['y']
-                    self.map.tiles[x][y] = tile
+                    self.map.tiles[y][x] = tile
