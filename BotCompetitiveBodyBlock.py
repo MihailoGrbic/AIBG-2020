@@ -3,7 +3,7 @@ from BotGoTo import BotGoTo
 from BotBodyBlock import BotBodyBlock
 from BotRandom import BotRandom
 from BotRushOnePart import BotRushOnePart
-# from BotGuardShop import BotGuardShop
+from BotGuardShop import BotGuardShop
 from BotSellAll import BotSellAll
 from GameState import GameState
 from Policy import PolicyAllowOnce, PolicyEnemyFound, PolicyAlwaysAllow, PolicyPartNumber, PolicyCantSellNextTurn
@@ -19,9 +19,7 @@ class BotCompetitiveBodyBlock(Bot):
         policy_list.append(PolicyCantSellNextTurn(BotSellAll()))
         policy_list.append(PolicyPartNumber(BotRushOnePart()))
         policy_list.append(PolicyAlwaysAllow(BotSellAll()))
-        policy_list.append(
-            PolicyEnemyFound(BotBodyBlock(shopping_tiles, self.expected_jukes)))
-        
+        policy_list.append(PolicyEnemyFound(BotBodyBlock(shopping_tiles, self.expected_jukes)))
         
         # policy_list.append(PolicyAlwaysAllow(BotGuardShop()))
         return policy_list

@@ -189,8 +189,7 @@ def get_all_non_digged(map: Map, currpos):
     for x in range(map.width):
         for y in range(map.height):
             if 'tileType' in map.tiles[y][x] \
-                    and map.tiles[y][x]['tileType'] == "DIGTILE" \
-                    and map.tiles[y][x]["dug"] == False:
+                    and map.tiles[y][x]['tileType'] == "DIGTILE":
                 tiles.append((x, y))
 
     tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))
@@ -212,6 +211,7 @@ def find_closest_coordinate(pos: tuple, tiles: List[tuple]):
     for tile in tiles:
         if dist(pos, tile) < best_dist:
             best = tile
+            best_dist = dist(pos, tile)
     return best
 
 

@@ -28,7 +28,6 @@ class PolicyAllowOnce(Policy):
         if self.policy_id not in current_game_state.internal_bot_state:
             if self.bot.finished(current_game_state):
                 current_game_state.internal_bot_state[self.policy_id] = "Finished"
-                print(current_game_state.internal_bot_state[self.policy_id])
                 return False
             return True
         else:
@@ -64,7 +63,8 @@ class PolicyCantSellNextTurn(Policy):
             path = find_path_to(current_game_state.self_info, current_game_state.other_info, current_game_state.map, tile[0], tile[1])
             if min_path > len(path) + 4:
                 min_path = len(path) + 4
-            
+
+        if min_path == turns_left: print("Cant sell next turn")
         return min_path == turns_left
         
         

@@ -12,6 +12,8 @@ class BotRushOnePart(Bot):
         if y > 12: target_y = 14
         else:  target_y = 10
 
+        print(target_x)
+        print(target_y)
         
         if len(current_game_state.self_info.player_info['parts']) < 1:
             if "singleDigTarget" not in current_game_state.internal_bot_state:
@@ -21,7 +23,9 @@ class BotRushOnePart(Bot):
                     current_game_state.internal_bot_state["singleDigTarget"] = (dig_x, dig_y)
 
             if "singleDigTarget" in current_game_state.internal_bot_state:        
-                (dig_x, dig_y) = current_game_state.internal_bot_state["singleDigTarget"]        
+                (dig_x, dig_y) = current_game_state.internal_bot_state["singleDigTarget"]     
+                print(dig_x)
+                print(dig_y)   
                 if dig_x != x or dig_y != y:
                     return move_once(current_game_state, (dig_x, dig_y))
                 else:
@@ -30,6 +34,8 @@ class BotRushOnePart(Bot):
                     else:
                         return actions.collect()
 
+        print(target_x)
+        print(target_y)
         return move_once(current_game_state, target=(target_x, target_y))
         
         
