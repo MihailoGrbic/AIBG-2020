@@ -121,16 +121,16 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 return 'find_neutral', explore(current_game_state, self_info)
 
         elif bot_state == 'sell':
-            bazar_locs = [
-                (10, 10),
-                (14, 14),
-                (10, 14),
-                (14, 10)
-            ]
+            # bazar_locs = [
+            #     (10, 10),
+            #     (14, 14),
+            #     (10, 14),
+            #     (14, 10)
+            # ]
+            #
+            # loc_to_go = min(bazar_locs, key=lambda loc: dist(loc, self_info.pos))
 
-            loc_to_go = min(bazar_locs, key=lambda loc: dist(loc, self_info.pos))
-
-            if dist(loc_to_go, self_info.pos) == 0 and len(self_info.player_info['parts']) > 0:
+            if near_bazar(self_info) and len(self_info.player_info['parts']) > 0:
                 # we're at bazar! sell
                 totems = {}
                 for part in self_info.player_info['parts']:
@@ -146,10 +146,10 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 else:
                     return 'sell', actions.sell_part(self_info.player_info['parts'][0]['id'])
 
-            if dist(loc_to_go, self_info.pos) == 0:
+            if near_bazar(self_info) == 0:
                 # another policy already sell
                 return 'initial', actions.down()
 
             return 'sell', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
-                         (loc_to_go[0], loc_to_go[1]))
+                         (12, 12))
 
