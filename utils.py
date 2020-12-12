@@ -224,7 +224,6 @@ def get_discovery_tiles_per_direction(map: Map, curr_pos: PlayerInfo) -> dict:
 
 def calc_new_tiles(map: Map, pos: (int, int)):
     # calculates all new tiles that will be discovered if player mozes to pos
-    # TODO: PlayerInfo({}) should be fixed
     if not move_available(map, PlayerInfo({}), pos):
         return -1
 
@@ -250,15 +249,18 @@ def random_movement_action():
 
 def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: list, start: tuple) -> tuple:
     reached = [start]
+    processed = set()
     while len(reached) > 0:
         current = reached[0]
         reached.remove(current)
+        processed.add(current)
         for direction in actions.move_actions:
-            target = add_vector(current, dir_to_diff[direction])
+            diff = dir_to_diff[direction]
+            target = add_vector(current, diff)
             if target in undiscovered:
                 return target
-            if move_available(map, other_info, target):
-                reached.append(direction)
+            if target not in processed and move_available(map, other_info, target):
+                reached.append(target)
 
 
 def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
