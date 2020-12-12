@@ -66,12 +66,37 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                         else:
                             return 'find_neutral', actions.collect()
                 else:
-                    #abandon, just sell it all
-                    return 'sell', actions.down()
+                    #fallback to pick any
+                    if len(self_info.player_info['parts']) == 3:
+                        return 'sell', actions.down()
+                    return 'fallback_pick_any', actions.down()
 
             return 'other_part', get_next_action_towards(current_game_state.map, current_game_state.other_info,
                                                       (self_info.x, self_info.y),
                                                       pos_to_go)
+
+        elif bot_state == 'fallback_pick_any':
+
+            if curr_tile['tileType'] == "DIGTILE":
+                if curr_tile["dug"] == False:
+                    return 'fallback_pick_any', actions.dig()
+                if curr_tile['part'] is not None:
+                    if len(self_info.player_info['parts']) == 2:
+                        return 'sell', actions.collect()
+                    else:
+                        return 'fallback_pick_any', actions.collect()
+
+            dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
+
+            if len(dig_tiles) != 0 and dig_tiles[0][0] == self_info.x and dig_tiles[0][1] == self_info.y:
+                del dig_tiles[0]
+
+            if len(dig_tiles) != 0:
+                return 'fallback_pick_any', get_next_action_towards(current_game_state.map, current_game_state.other_info,
+                                                            (self_info.x, self_info.y),
+                                                            (dig_tiles[0][0], dig_tiles[0][1]))
+            else:
+                return 'fallback_pick_any', explore(current_game_state, self_info)
 
         elif bot_state == 'find_neutral':
             if len(self_info.player_info['parts']) == 3:
@@ -113,7 +138,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                         totems[part['totemType']] = 0
                     totems[part['totemType']] += 1
                 for totem in totems:
-                    if totems[totem] == 2:
+                    if totems[totem] == 2 and totem != "NEUTRAL":
                         return 'initial', actions.sell_totem()
 
                 if len(self_info.player_info['parts']) == 1:

@@ -193,9 +193,6 @@ def get_all_non_digged(map: Map, currpos: (int, int)):
                     and ('dug' not in currtile
                          or not currtile["dug"]):
                 tiles.append((x, y))
-            if 'tileType' in currtile \
-                    and currtile['tileType'] == "DIGTILE":
-                print("dugtile potential: ", currtile)
 
     tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))
     print("digtiles: ", tiles)

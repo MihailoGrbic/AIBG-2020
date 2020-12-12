@@ -35,7 +35,8 @@ class Map(object):
 
     def update_tile_reverse(self, x, y, tile):
         self.tiles[y][x]["DISCOVERED"] = True
-        self.tiles[y][x]["tileType"] = tile["tileType"]
+        if not(tile["tileType"] == "DIGTILE" and x+y==24):
+            self.tiles[y][x]["tileType"] = tile["tileType"]
         if "trap" in tile.keys() and tile["trap"] is not None and tile["trap"]["visible"] is True:
             self.tiles[y][x]["is_trap"] = tile['trap']['trapType']
 
