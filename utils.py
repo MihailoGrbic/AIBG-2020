@@ -2,7 +2,6 @@ from PlayerInfo import PlayerInfo
 from Map import Map
 from PlayerInfo import PlayerInfo
 from pprint import pprint
-from GameState import GameState
 import actions
 from typing import List
 import random
@@ -146,10 +145,10 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
             open_list.append(child)
 
 
-def move_once(current_game_state: GameState, target):
+def move_once(current_game_state, target):
     self_info = current_game_state.self_info.player_info
     path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), target)
-    print(path)
+    print("path: ", path)
     if path is None or len(path) == 1:
         print("Error, cant move arrived at target")
         return "None"
@@ -192,11 +191,14 @@ def get_all_non_digged(map: Map, currpos: (int, int)):
             if 'tileType' in currtile \
                     and currtile['tileType'] == "DIGTILE" \
                     and ('dug' not in currtile
-                         or not currtile["dug"]
-                         or currtile['part'] is not None):
+                         or not currtile["dug"]):
                 tiles.append((x, y))
+            if 'tileType' in currtile \
+                    and currtile['tileType'] == "DIGTILE":
+                print("dugtile potential: ", currtile)
 
     tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))
+    print("digtiles: ", tiles)
     return tiles
 
 
@@ -287,9 +289,9 @@ def get_symetric_pos(map: Map, pos: (int, int)):
     return (map.width - pos[0] - 1, map.height - pos[1] - 1)
 
 
-def explore(current_game_state: GameState, pos: PlayerInfo):
+def explore(current_game_state, pos: PlayerInfo):
     sol = get_discovery_tiles_per_direction(current_game_state.map, pos)
-    print(sol)
+    print("close discovery:", sol)
     allactions = [actions.up(), actions.down(), actions.left(), actions.right()]
     max_ = max([sol[action] for action in allactions])
     only_max_actions = [action for action in allactions if sol[action] == max_]
@@ -301,6 +303,7 @@ def explore(current_game_state: GameState, pos: PlayerInfo):
             PlayerInfo({}),
             get_all_undiscovered_tiles(current_game_state.map),
             (pos.x, pos.y))
+        print("closest undiscovered: ", closest_undiscovered)
         return move_once(current_game_state, closest_undiscovered)
     else:
         return max_dir_action

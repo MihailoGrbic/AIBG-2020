@@ -1,6 +1,7 @@
 from BotStateMachine import BotStateMachine
 from utils import *
 import actions
+from GameState import GameState
 
 class EnemyBotCollectTotem(BotStateMachine):
 
@@ -20,6 +21,9 @@ class EnemyBotCollectTotem(BotStateMachine):
                         return 'other_part', actions.collect()
 
             dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
+
+            if len(dig_tiles) != 0 and dig_tiles[0][0] == self_info.x and dig_tiles[0][1] == self_info.y:
+                del dig_tiles[0]
 
             if len(dig_tiles) != 0:
                 return 'initial', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
@@ -54,6 +58,9 @@ class EnemyBotCollectTotem(BotStateMachine):
                         return 'sell', actions.collect()
 
             dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
+
+            if len(dig_tiles) != 0 and dig_tiles[0][0] == self_info.x and dig_tiles[0][1] == self_info.y:
+                del dig_tiles[0]
 
             if len(dig_tiles) != 0:
                 return 'find_neutral', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),

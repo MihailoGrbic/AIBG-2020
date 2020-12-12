@@ -38,6 +38,9 @@ class EnemyBotCollectSell(Bot):
 
         dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
 
+        if len(dig_tiles) != 0 and dig_tiles[0][0] == self_info.x and dig_tiles[0][1] == self_info.y:
+            del dig_tiles[0]
+
         if len(dig_tiles) != 0:
             return get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                          (dig_tiles[0][0], dig_tiles[0][1]))

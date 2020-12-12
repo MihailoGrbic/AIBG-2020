@@ -1,5 +1,6 @@
 from Bot import Bot
 from utils import *
+from GameState import GameState
 
 
 class BotStateMachine(Bot):

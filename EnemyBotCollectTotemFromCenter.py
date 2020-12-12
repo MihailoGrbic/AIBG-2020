@@ -1,6 +1,7 @@
 from BotStateMachine import BotStateMachine
 from utils import *
 import actions
+from GameState import GameState
 
 class EnemyBotCollectTotemFromCenter(BotStateMachine):
 
@@ -10,7 +11,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
         curr_tile = current_game_state.map.tiles[self_info.y][self_info.x]
 
         if bot_state == 'initial':
-            goal = (14, 14)
+            goal = (9, 9)
 
             if goal[0] == self_info.x and goal[1] == self_info.y:
                 return 'first_dig', actions.down()
@@ -40,6 +41,9 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
 
             dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
 
+            if len(dig_tiles) != 0 and dig_tiles[0][0] == self_info.x and dig_tiles[0][1] == self_info.y:
+                del dig_tiles[0]
+
             if len(dig_tiles) != 0:
                 return 'first_dig', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
@@ -52,7 +56,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
             if pos_to_go[0] == self_info.pos[0] and pos_to_go[1] == self_info.pos[1]:
                 if curr_tile["dug"] == False:
                     return 'other_part', actions.dig()
-                if curr_tile['part'] is not None:
+                elif curr_tile['part'] is not None:
                         if len(self_info.player_info['parts']) == 3:
                             neutral_part_id = None
                             for part in self_info.player_info['parts']:
@@ -61,6 +65,9 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                             return 'find_neutral', actions.swap_part(neutral_part_id)
                         else:
                             return 'find_neutral', actions.collect()
+                else:
+                    #abandon, just sell it all
+                    return 'sell', actions.down()
 
             return 'other_part', get_next_action_towards(current_game_state.map, current_game_state.other_info,
                                                       (self_info.x, self_info.y),
@@ -78,6 +85,9 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                         return 'sell', actions.collect()
 
             dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
+
+            if len(dig_tiles) != 0 and dig_tiles[0][0] == self_info.x and dig_tiles[0][1] == self_info.y:
+                del dig_tiles[0]
 
             if len(dig_tiles) != 0:
                 return 'find_neutral', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
@@ -97,7 +107,20 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
 
             if dist(loc_to_go, self_info.pos) == 0 and len(self_info.player_info['parts']) > 0:
                 # we're at bazar! sell
-                return 'initial', actions.sell_totem()
+                totems = {}
+                for part in self_info.player_info['parts']:
+                    if part['totemType'] not in totems:
+                        totems[part['totemType']] = 0
+                    totems[part['totemType']] += 1
+                for totem in totems:
+                    if totems[totem] == 2:
+                        return 'initial', actions.sell_totem()
+
+                if len(self_info.player_info['parts']) == 1:
+                    return 'initial', actions.sell_part(self_info.player_info['parts'][0]['id'])
+                else:
+                    return 'sell', actions.sell_part(self_info.player_info['parts'][0]['id'])
+
 
             return 'sell', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                          (loc_to_go[0], loc_to_go[1]))
