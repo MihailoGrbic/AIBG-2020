@@ -1,8 +1,4 @@
-from collections.abc import MutableMapping
-from typing import _KT, Optional, _VT_co, overload, Union, _T
-
-
-class Tile(MutableMapping):
+class Tile:
 
     def __init__(self, tile: dict):
         self.tile = tile
