@@ -139,3 +139,25 @@ class PolicyBodyBlockFallback(Policy):
         and current_game_state.self_info.player_info["health"] < current_game_state.other_info.player_info["health"]:
             return True
 
+class PolicyNoProgress(Policy):
+    def __init__(self, Bot: Bot):
+        Policy.__init__(self, Bot)
+
+    def should_execute(self, current_game_state: GameState):
+
+        if 'lru_positions' not in current_game_state.internal_bot_state:
+            current_game_state.internal_bot_state['lru_positions'] = []
+
+        if len(current_game_state.internal_bot_state['lru_positions']) == 10:
+            del current_game_state.internal_bot_state['lru_positions'][0]
+
+        current_game_state.internal_bot_state['lru_positions'].append(current_game_state.self_info.pos)
+
+        positions = {}
+        for pos in current_game_state.internal_bot_state['lru_positions']:
+            if pos not in positions:
+                positions[pos] = 0
+            positions[pos] += 1
+
+        return len(positions) <= 3
+
