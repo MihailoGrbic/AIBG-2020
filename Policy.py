@@ -59,6 +59,8 @@ class PolicyPartNumber(Policy):
         self.want_more = want_more
 
     def should_execute(self, current_game_state: GameState):
+        if current_game_state.self_info.player_info["money"] > 0:
+            return False
         if self.want_more:
             return len(current_game_state.self_info.player_info['parts']) < self.ideal_parts
         else:
