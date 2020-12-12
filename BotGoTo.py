@@ -13,3 +13,8 @@ class BotGoTo(Bot):
     def play_single_turn(self, current_game_state: GameState):
         return move_once(current_game_state, target=(self.x, self.y))
 
+    def finished(self, current_game_state: GameState):
+        if current_game_state.self_info.x == self.x and current_game_state.self_info.y == self.y:
+            print("kurac")
+            return True
+

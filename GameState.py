@@ -21,15 +21,15 @@ class GameState(object):
         if bool(report['otherPlayerObject']):
             self.other_info = PlayerInfo(report['otherPlayerObject'])
             self.opponent_visible = True
-            x = self.other_info['x']
-            y = self.other_info['y']
+            x = self.other_info.x
+            y = self.other_info.y
             r_x, r_y = self.map.reverse_corr(x, y)
-            if self.other_info['scorpionPoison']:
+            if self.other_info.player_info['scorpionPoison']:
 
                 self.map.mark_trap(x, y,'SCORPION')
                 self.map.mark_trap(r_x, r_y,'SCORPION')
 
-            if self.other_info['trappedInQuickSand']:
+            if self.other_info.player_info['trappedInQuickSand']:
                 self.map.mark_trap(x, y,'QUICKSAND')
                 self.map.mark_trap(r_x, r_y,'QUICKSAND')
 

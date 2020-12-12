@@ -23,13 +23,18 @@ class PolicyAllowOnce(Policy):
         self.policy_id = policy_id
 
     def should_execute(self, current_game_state: GameState):
+        
         if self.policy_id not in current_game_state.internal_bot_state:
-            current_game_state.internal_bot_state[self.policy_id] = "Finished"
+            if self.bot.finished(current_game_state):
+                current_game_state.internal_bot_state[self.policy_id] = "Finished"
+                print(current_game_state.internal_bot_state[self.policy_id])
+                return False
             return True
         else:
             return False
 
 class PolicyEnemyFound(Policy):
     def should_execute(self, current_game_state: GameState):
+        print(current_game_state.opponent_visible)
         return current_game_state.opponent_visible
 
