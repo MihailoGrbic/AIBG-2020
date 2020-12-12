@@ -23,7 +23,7 @@ class Map(object):
         r_y = self.height - y - 1
         return r_x, r_y
 
-    def get_tile(self, x, y) -> dict:
+    def get_tile(self, x, y):
         return self.tiles[y][x]
 
     def update_tile(self, tile):

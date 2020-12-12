@@ -191,7 +191,7 @@ def get_all_non_digged(map: Map, currpos):
                     and map.tiles[y][x]["dug"] == False:
                 tiles.append((x, y))
 
-    tiles = sorted(tiles, key=lambda digtile: dist((currpos.x, currpos.y), digtile))
+    tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))
     return tiles
 
 
