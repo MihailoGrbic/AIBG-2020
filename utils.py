@@ -7,6 +7,13 @@ import actions
 from typing import List
 import random
 
+dir_to_diff = {
+    actions.up(): (0, -1),
+    actions.down(): (0, 1),
+    actions.left(): (-1, 0),
+    actions.right(): (1, 0)
+}
+
 
 def dist(pos1: tuple, pos2: tuple) -> int:
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
@@ -241,13 +248,6 @@ def random_movement_action():
 
 
 def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: list, start: tuple) -> tuple:
-    dir_to_diff = {
-        actions.up(): (0, -1),
-        actions.down(): (0, 1),
-        actions.left(): (-1, 0),
-        actions.right(): (1, 0)
-    }
-
     dist_map = [[-1 for j in map.size] for i in map.size]
     undiscovered = [start]
     while len(undiscovered) > 0:
