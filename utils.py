@@ -9,6 +9,9 @@ import actions
 def dist(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
+def tile_safe(current_map: Map, x, y, damage_tolerant = False, sandtrap_tolerant = False):
+    #Cekamo Soskica
+    return True
 
 def move_available(current_map: Map, other_player: PlayerInfo, x, y):
     # TODO: Check how we store unpassable data

@@ -12,6 +12,7 @@ class GameState(object):
         self.self_info = PlayerInfo(res, player1=res['nextPlayerObject'])
         self.other_info = PlayerInfo(res, player1=res['otherPlayerObject'])
         self.opponent_visible = False
+        self.internal_bot_state = {}
 
     def update_game_state(self, report):
 
