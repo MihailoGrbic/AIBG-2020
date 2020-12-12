@@ -20,7 +20,11 @@ class BotRushOnePart(Bot):
                 diggable_tiles = get_all_non_digged(current_game_state.map, (x, y))
                 if len(diggable_tiles) > 0:
                     (dig_x, dig_y) = find_closest_coordinate((x, y), diggable_tiles)
-                    current_game_state.internal_bot_state["singleDigTarget"] = (dig_x, dig_y)
+                    diggable_dist = dist((x, y), (dig_x, dig_y))
+                    target_dist = dist((x, y), (target_x, target_y))
+                    tolerance = 30 / target_dist
+                    if diggable_dist < tolerance:
+                        current_game_state.internal_bot_state["singleDigTarget"] = (dig_x, dig_y)
 
             if "singleDigTarget" in current_game_state.internal_bot_state:        
                 (dig_x, dig_y) = current_game_state.internal_bot_state["singleDigTarget"]     
