@@ -3,9 +3,10 @@ from utils import *
 
 class BotBodyBlock(Bot):
 
-    def __init__(self, blocked_tiles):
+    def __init__(self, blocked_tiles, expected_jukes = "safe"):
         self.counter = 0
         self.blocked_tiles = blocked_tiles
+        self.expected_jukes = expected_jukes
 
     def play_single_turn(self, current_game_state):
         if current_game_state.opponent_visible:

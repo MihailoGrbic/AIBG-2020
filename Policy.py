@@ -35,6 +35,19 @@ class PolicyAllowOnce(Policy):
 
 class PolicyEnemyFound(Policy):
     def should_execute(self, current_game_state: GameState):
-        print(current_game_state.opponent_visible)
         return current_game_state.opponent_visible
 
+class PolicyPartNumber(Policy):
+    # Executes if a bot needs more or less parts, if want_more is true any number of items less than the ideal 
+    # number will trigger this policy, while the opposite is true if want_more is false
+    def __init__(self, Bot: Bot, ideal_parts = 1, want_more = True):
+        Policy.__init__(self, Bot)
+        self.ideal_parts = ideal_parts
+        self.want_more = want_more
+
+    def should_execute(self, current_game_state: GameState):
+        if self.want_more:
+            return len(current_game_state.self_info.player_info['parts']) < self.ideal_parts
+        else:
+            return len(current_game_state.self_info.player_info['parts']) > self.ideal_parts
+        
