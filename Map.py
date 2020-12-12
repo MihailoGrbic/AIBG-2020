@@ -5,6 +5,7 @@ class Tile:
         self.x = tile.get('x', -1)
         self.y = tile.get('y', -1)
         self.blocked = tile.get('x', False)
+        self.discovered = False
 
     def __getitem__(self, item: str):
         return self.tile[item]
@@ -17,9 +18,16 @@ class Tile:
             self.y = value
         if key == "BLOCKTILE":
             self.blocked = True
+        self.discovered = True
 
     def __contains__(self, item):
         return item in self.tile
+
+    def __len__(self):
+        return len(self.tile)
+
+    def __bool__(self):
+        return bool(self.tile)
 
 
 def create_tile_map(res_tiles) -> list:
@@ -64,5 +72,5 @@ class Map(object):
             self.tiles[tile['y']][tile['x']][key] = tile[key]
 
     def mark_trap(self, x, y, trap_type):
-        self.tiles[y][x]['is_trap'] = True
+        self.tiles[y][x].__setitem__('is_trap', True)  # ['is_trap'] = True
         self.tiles[y][x]['trap_type'] = trap_type
