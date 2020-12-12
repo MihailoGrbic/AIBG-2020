@@ -255,16 +255,16 @@ def within_bounds(map: Map, pos: (int, int)):
 
 
 def random_movement_action():
-    random.choice([actions.up(), actions.down(), actions.left(), actions.right()])
+    return random.choice([actions.up(), actions.down(), actions.left(), actions.right()])
 
 
 def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: list, start: tuple) -> tuple:
     reached = [start]
     processed = set()
+    processed.add(start)
     while len(reached) > 0:
         current = reached[0]
-        reached.remove(current)
-        processed.add(current)
+        del reached[0]
         for direction in actions.move_actions:
             diff = dir_to_diff[direction]
             target = add_vector(current, diff)
@@ -272,9 +272,12 @@ def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: li
                 return target
             if target not in processed and move_available(map, other_info, target):
                 reached.append(target)
+                processed.add(target)
 
 
 def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
+    if other_player.x == end[0] and other_player.y == end[1] and dist((other_player.x, other_player.y), start) < 3:
+        return random_movement_action()
     path = astar(maze, other_player, start, end)
     print(path)
     x_diff = path[1][0] - path[0][0]
@@ -290,26 +293,6 @@ def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
 
 def get_symetric_pos(map: Map, pos: (int, int)):
     return (map.width - pos[0] - 1, map.height - pos[1] - 1)
-
-
-def explore(current_game_state, pos: PlayerInfo):
-    sol = get_discovery_tiles_per_direction(current_game_state.map, pos)
-    print("close discovery:", sol)
-    allactions = [actions.up(), actions.down(), actions.left(), actions.right()]
-    max_ = max([sol[action] for action in allactions])
-    only_max_actions = [action for action in allactions if sol[action] == max_]
-    max_dir_action = random.choice(only_max_actions)
-
-    if max_ == 0:
-        closest_undiscovered = find_closest_undiscovered(
-            current_game_state.map,
-            PlayerInfo({}),
-            get_all_undiscovered_tiles(current_game_state.map),
-            (pos.x, pos.y))
-        print("closest undiscovered: ", closest_undiscovered)
-        return move_once(current_game_state, closest_undiscovered)
-    else:
-        return max_dir_action
 
 
 def near_bazar(pos:PlayerInfo):

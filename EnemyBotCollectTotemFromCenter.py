@@ -2,6 +2,7 @@ from BotStateMachine import BotStateMachine
 from utils import *
 import actions
 from GameState import GameState
+from BotExplore import *
 
 class EnemyBotCollectTotemFromCenter(BotStateMachine):
 
@@ -11,7 +12,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
         curr_tile = current_game_state.map.tiles[self_info.y][self_info.x]
 
         if bot_state == 'initial':
-            goal = (9, 9)
+            goal = (7, 7)
 
             if goal[0] == self_info.x and goal[1] == self_info.y:
                 return 'first_dig', actions.down()
@@ -27,15 +28,16 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                     return 'first_dig', actions.dig()
                 if curr_tile['part'] is not None:
                     current_game_state.internal_bot_state['other_tile_pos'] = get_symetric_pos(current_game_state.map, self_info.pos)
+                    current_game_state.internal_bot_state['other_tile_type'] = curr_tile['part']['totemType']
                     if curr_tile['part']['totemType'] != "NEUTRAL":
                         if len(self_info.player_info['parts']) == 3:
                             neutral_part_id = None
                             for part in self_info.player_info['parts']:
                                 if part['totemType'] == "NEUTRAL":
                                     neutral_part_id = part['id']
-                            return 'other_part', actions.swap_part(neutral_part_id)
+                            return 'other_part_pre_bazar', actions.swap_part(neutral_part_id)
                         else:
-                            return 'other_part', actions.collect()
+                            return 'other_part_pre_bazar', actions.collect()
                     if curr_tile['part']['totemType'] == "NEUTRAL" and len(self_info.player_info['parts']) < 3:
                         return 'first_dig', actions.collect()
 
@@ -48,7 +50,25 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 return 'first_dig', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                return 'first_dig', explore(current_game_state, self_info)
+                return 'first_dig', BotExplore().play_single_turn(current_game_state)
+
+        elif bot_state == "other_part_pre_bazar":
+
+            if near_bazar(self_info):
+                if current_game_state.internal_bot_state['other_tile_type'] \
+                        in current_game_state.last_report['tradeCenter']['partsTC']:
+                    # if in bazar fallback
+                    return 'sell', actions.down()
+                elif len(self_info.player_info['parts']) == 0:
+                    # if already sold by other policy, just revert to initial
+                    return 'initial', actions.down()
+                else:
+                    # continue with chasing
+                    return 'other_part', actions.down()
+
+            # go toward bazar
+            return 'other_part_pre_bazar', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
+                                                                   (10,10))
 
         elif bot_state == 'other_part':
             pos_to_go = current_game_state.internal_bot_state['other_tile_pos']
@@ -96,7 +116,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                                                             (self_info.x, self_info.y),
                                                             (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                return 'fallback_pick_any', explore(current_game_state, self_info)
+                return 'fallback_pick_any', BotExplore().play_single_turn(current_game_state)
 
         elif bot_state == 'find_neutral':
             if len(self_info.player_info['parts']) == 3:
@@ -118,7 +138,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 return 'find_neutral', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                return 'find_neutral', explore(current_game_state, self_info)
+                return 'find_neutral', BotExplore().play_single_turn(current_game_state)
 
         elif bot_state == 'sell':
             # bazar_locs = [
@@ -151,5 +171,5 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 return 'initial', actions.down()
 
             return 'sell', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
-                         (12, 12))
+                         (10,10))
 

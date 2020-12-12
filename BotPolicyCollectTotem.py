@@ -18,6 +18,7 @@ class BotPolicyCollectTotem(Bot):
 
     def get_policy_list(self, current_game_state: GameState):
         policy_list = []
+        policy_list.append(PolicyNoProgress(BotRandom()))
         policy_list.append(PolicyNearBazarCanMakeTotem(BotSellTotem()))
         policy_list.append(PolicyAlwaysAllow(EnemyBotCollectTotemFromCenter()))
 
