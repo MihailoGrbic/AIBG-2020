@@ -15,7 +15,7 @@ class EnemyBotCollectTotem(BotStateMachine):
                 if curr_tile["dug"] == False:
                     return 'initial', actions.dig()
                 if curr_tile['part'] is not None:
-                    current_game_state.internal_bot_state['other_tile_pos'] = get_symetric_pos(self_info.pos)
+                    current_game_state.internal_bot_state['other_tile_pos'] = get_symetric_pos(current_game_state.map, self_info.pos)
                     if curr_tile['part']['totemType'] != "NEUTRAL":
                         return 'other_part', actions.collect()
 
