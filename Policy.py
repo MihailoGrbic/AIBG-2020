@@ -74,10 +74,28 @@ class PolicyCantSellNextTurn(Policy):
         min_path = 100
         for tile in shopping_tiles:
             path = find_path_to(current_game_state.self_info, current_game_state.other_info, current_game_state.map, tile[0], tile[1])
-            if min_path > len(path) + 4:
-                min_path = len(path) + 4
+            if min_path > len(path) - 5:
+                min_path = len(path) - 5
 
-        if min_path == turns_left: print("Cant sell next turn")
-        return min_path == turns_left
+        if min_path > turns_left: print("Cant sell next turn")
+        return min_path > turns_left
         
+class PolicyBodyBlockFallback(Policy):
+    def __init__(self, Bot: Bot):
+        Policy.__init__(self, Bot)
+
+    def should_execute(self, current_game_state: GameState):
+        if "money" in current_game_state.other_info.player_info \
+        and current_game_state.self_info.player_info["money"] < current_game_state.other_info.player_info["money"]:
+            return True
+
+        if current_game_state.self_info.player_info["health"] < 50 \
+        and current_game_state.self_info.player_info["health"] < current_game_state.other_info.player_info["health"]:
+            return True
+
+        if [current_game_state.other_info.x, current_game_state.other_info.y] in shopping_tiles \
+        and len(current_game_state.other_info.player_info["parts"]) > 0 \
+        and current_game_state.self_info.player_info["health"] < current_game_state.other_info.player_info["health"]:
+            return True
+    
         

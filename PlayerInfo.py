@@ -1,22 +1,6 @@
 # from utils import *
 
 # Example dict:
-# {'buildings': [],
-#  'health': 100,
-#  'id': 1,
-#  'initX': 0,
-#  'initY': 0,
-#  'kills': 0,
-#  'lives': 5,
-#  'notFinishedBuildings': [],
-#  'resources': {'METAL': 0, 'STONE': 0, 'WOOD': 0},
-#  'score': 0,
-#  'stringType': 'Player',
-#  'stupidMoves': 7,
-#  'weapon1': None,
-#  'weapon2': None,
-#  'x': 3,
-#  'y': 2}
 
 
 class PlayerInfo(object):
