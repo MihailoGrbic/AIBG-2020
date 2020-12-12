@@ -186,11 +186,12 @@ def get_all_non_digged(map: Map, currpos: (int, int)):
     tiles = []
     for x in range(map.width):
         for y in range(map.height):
-            if 'tileType' in map.tiles[y][x] \
-                    and map.tiles[y][x]['tileType'] == "DIGTILE" \
-                    and ('dig' not in map.tiles[y][x]
-                         or map.tiles[y][x]["dug"] == False
-                         or 'totemType' in map.tiles[y][x]['dug']['parts']):
+            currtile = map.tiles[y][x]
+            if 'tileType' in currtile \
+                    and currtile['tileType'] == "DIGTILE" \
+                    and ('dug' not in currtile
+                         or not currtile["dug"]
+                         or currtile['part'] is not None):
                 tiles.append((x, y))
 
     tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))

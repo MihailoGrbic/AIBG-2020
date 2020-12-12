@@ -44,7 +44,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 return 'first_dig', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                return 'first_dig', explore(current_game_state, self_info.pos)
+                return 'first_dig', explore(current_game_state, self_info)
 
         elif bot_state == 'other_part':
             pos_to_go = current_game_state.internal_bot_state['other_tile_pos']
@@ -83,7 +83,7 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 return 'find_neutral', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                return 'find_neutral', explore(current_game_state, self_info.pos)
+                return 'find_neutral', explore(current_game_state, self_info)
 
         elif bot_state == 'sell':
             bazar_locs = [

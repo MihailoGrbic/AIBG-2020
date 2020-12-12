@@ -38,3 +38,7 @@ class Map(object):
         self.tiles[y][x]["tileType"] = tile["tileType"]
         if "trap" in tile.keys() and tile["trap"] is not None and tile["trap"]["visible"] is True:
             self.tiles[y][x]["is_trap"] = tile['trap']['trapType']
+
+    def mark_trap(self, x, y, trap_type):
+        self.tiles[y][x]['is_trap'] = True
+        self.tiles[y][x]['trap_type'] = trap_type
