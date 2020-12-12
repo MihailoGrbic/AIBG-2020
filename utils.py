@@ -5,6 +5,7 @@ from pprint import pprint
 from GameState import GameState
 import actions
 from typing import List
+import random
 
 
 def dist(pos1, pos2):
@@ -120,6 +121,7 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
             # Add the child to the open list
             open_list.append(child)
 
+
 def move_once(current_game_state: GameState, target):
     self_info = current_game_state.self_info.player_info
     path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), target)
@@ -188,6 +190,7 @@ def get_all_undiscovered_tiles(map: Map):
         for y in range(map.size):
             if not bool(map.tiles[y][x]):
                 tiles.append((x, y))
+    return tiles
 
 
 def find_closest_coordinate(pos: tuple, tiles: List[tuple]):
@@ -226,3 +229,7 @@ def calc_new_tiles(map: Map, pos: (int, int)):
 
 def within_bounds(map: Map, pos: (int, int)):
     return 0 <= pos[0] < map.width and 0 <= pos[1] < map.height
+
+
+def random_movement_action():
+    random.choice([actions.up(), actions.down(), actions.left(), actions.right()])
