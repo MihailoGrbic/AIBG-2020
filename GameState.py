@@ -66,7 +66,7 @@ class GameState(object):
                             self.totem_locations[found_part] = pos
                             self.totem_locations[part_id] = "Moved"
 
-                if "part" in tile and "id" in tile["part"]:
+                if "part" in tile and tile["part"] is not None and "id" in tile["part"]:
                     totem_id = tile["part"]["id"]
                     self.totem_locations[totem_id] = (tile["x"], tile["y"])
                     diff = 1 if totem_id % 2 == 1 else -1
@@ -76,3 +76,10 @@ class GameState(object):
         if "tradeCenter" in report and "partsTC" in report["tradeCenter"]:
             for part in report["tradeCenter"]["partsTC"]:
                 self.totem_locations[part["id"]] = "Shop"
+
+        for part in self.self_info.player_info["parts"]:
+            self.totem_locations[part["id"]] = "Self"
+
+        if bool(self.other_info.player_info):
+            for part in self.other_info.player_info["parts"]:
+                self.totem_locations[part["id"]] = "Other"
