@@ -20,7 +20,7 @@ class GameState(object):
 
     def update_game_state(self, report):
 
-        self.update_totem_locations(report)
+        # self.update_totem_locations(report)
 
         self.self_info = PlayerInfo(report['nextPlayerObject'])
         if bool(report['otherPlayerObject']):
