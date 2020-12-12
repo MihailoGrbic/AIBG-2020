@@ -25,8 +25,8 @@ class Map(object):
 
     def update_tile(self, tile):
         for key in tile.keys():
-            self.map[tile['y']][tile['x']][key] = tile[key]
+            self.tiles[tile['y']][tile['x']][key] = tile[key]
 
     def mark_trap(self, x, y, trap_type):
-        self.tiles[tile['y']][tile['x']]['is_trap'] = True
-        self.tile[tile['y']][tile['x']]['trap_type'] = trap_type
+        self.tiles[y][x]['is_trap'] = True
+        self.tiles[y][x]['trap_type'] = trap_type
