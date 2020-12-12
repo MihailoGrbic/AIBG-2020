@@ -9,7 +9,7 @@ class BotExplore(Bot):
     def play_single_turn(self, current_game_state: GameState):
         discoveries = get_discovery_tiles_per_direction(current_game_state.map, current_game_state.self_info)
         for direction in move_actions:
-            if not move_available(current_game_state.map, current_game_state.other_info, add_vector(current_game_state.self_info.pos, dir_to_diff(direction))):
+            if not move_available(current_game_state.map, current_game_state.other_info, add_vector(current_game_state.self_info.pos, dir_to_diff[direction])):
                 discoveries[direction] = 0
         best_action = max(move_actions, key=lambda direction: discoveries[direction])
         print(best_action)
