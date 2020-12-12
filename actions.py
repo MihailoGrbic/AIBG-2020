@@ -27,4 +27,4 @@ def trade_parts_with_curse(give_part_id, take_part_id): return f"tradeWithCurse-
 def sell_totem(): return "sellTotem"
 
 
-move_actions = {left(), right(), up(), down()}
+move_actions = [left(), right(), up(), down()]
