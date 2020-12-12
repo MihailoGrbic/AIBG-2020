@@ -10,8 +10,9 @@ from actions import move_actions
 class BotExplore(Bot):
 
     def play_single_turn(self, current_game_state: GameState):
-        discoveries = get_discovery_tiles_per_direction(current_game_state.map, current_game_state.self_info.pos)
-        best_action = min(move_actions, key=lambda direction: discoveries[direction])
+        discoveries = get_discovery_tiles_per_direction(current_game_state.map, current_game_state.self_info)
+        best_action = max(move_actions, key=lambda direction: discoveries[direction])
+        print(best_action)
         if discoveries[best_action] != 0:
             return best_action
 
