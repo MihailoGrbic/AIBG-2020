@@ -49,7 +49,9 @@ class PolicyEnemyNearby(Policy):
         perceived_distance = astar_dist((current_game_state.self_info.x, current_game_state.self_info.y), (enemy_pos[0], enemy_pos[1]), current_game_state.map, current_game_state.other_info)
         return perceived_distance < 5 and current_game_state.internal_bot_state["TurnsSinceSeenEnemy"] < self.turn_tolerance
         
-
+class PolicyEnemyQuicksand(Policy):
+    def should_execute(self, current_game_state: GameState):
+        return current_game_state.opponent_visible and current_game_state.other_info.player_info["trappedInQuickSand"]
 class PolicyPartNumber(Policy):
     # Executes if a bot needs more or less parts, if want_more is true any number of items less than the ideal 
     # number will trigger this policy, while the opposite is true if want_more is false

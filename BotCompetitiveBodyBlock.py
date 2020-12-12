@@ -7,7 +7,7 @@ from BotGuardShop import BotGuardShop
 from BotSellAll import BotSellAll
 from BotPolicyCollectTotem import BotPolicyCollectTotem
 from GameState import GameState
-from Policy import PolicyAllowOnce, PolicyEnemyFound, PolicyAlwaysAllow, PolicyPartNumber, PolicyCantSellNextTurn, PolicyEnemyNearby, PolicyBodyBlockFallback
+from Policy import PolicyAllowOnce, PolicyEnemyFound, PolicyAlwaysAllow, PolicyPartNumber, PolicyCantSellNextTurn, PolicyEnemyNearby, PolicyBodyBlockFallback, PolicyEnemyQuicksand
 from utils import shopping_tiles
 
 
@@ -21,6 +21,7 @@ class BotCompetitiveBodyBlock(Bot):
         policy_list.append(PolicyBodyBlockFallback(BotPolicyCollectTotem()))
         policy_list.append(PolicyCantSellNextTurn(BotSellAll()))
         policy_list.append(PolicyPartNumber(BotRushOnePart()))
+        policy_list.append(PolicyEnemyQuicksand(BotRandom()))
         policy_list.append(PolicyEnemyFound(BotBodyBlock(shopping_tiles, self.expected_jukes)))
         policy_list.append(PolicyEnemyNearby(BotBodyBlock(shopping_tiles, self.expected_jukes)))
         policy_list.append(PolicyAlwaysAllow(BotGuardShop()))
