@@ -1,4 +1,3 @@
-from __future__ import annotations
 from Client import *
 from GameState import GameState
 from Map import Map
@@ -15,7 +14,7 @@ class Bot(object):
     def get_policy_list(self, current_game_state: GameState = None):
         return list()
 
-    def resolve_policy(self, current_game_state: GameState) -> Bot:
+    def resolve_policy(self, current_game_state: GameState):
         for policy in self.get_policy_list(current_game_state):
             if policy.should_execute(current_game_state):
                 return policy.bot
