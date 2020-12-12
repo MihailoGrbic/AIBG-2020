@@ -202,12 +202,12 @@ def find_closest_coordinate(pos: tuple, tiles: List[tuple]):
     return best
 
 
-def get_discovery_tiles_per_direction(map: Map, currpos):
-    sol = {}
-    sol[actions.up()] = calc_new_tiles(map, (currpos.x, currpos.y - 1))
-    sol[actions.down()] = calc_new_tiles(map, (currpos.x, currpos.y + 1))
-    sol[actions.left()] = calc_new_tiles(map, (currpos.x - 1, currpos.y))
-    sol[actions.right()] = calc_new_tiles(map, (currpos.x + 1, currpos.y))
+def get_discovery_tiles_per_direction(map: Map, curr_pos: PlayerInfo) -> dict:
+    sol = dict()
+    sol[actions.up()] = calc_new_tiles(map, (curr_pos.x, curr_pos.y - 1))
+    sol[actions.down()] = calc_new_tiles(map, (curr_pos.x, curr_pos.y + 1))
+    sol[actions.left()] = calc_new_tiles(map, (curr_pos.x - 1, curr_pos.y))
+    sol[actions.right()] = calc_new_tiles(map, (curr_pos.x + 1, curr_pos.y))
     return sol
 
 
