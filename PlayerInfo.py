@@ -20,7 +20,7 @@
 
 
 class PlayerInfo(object):
-    def __init__(self, res, player1):
+    def __init__(self, player1):
         # TODO (djokjulapfe): nisam siguran kako ovo player1/2 radi
         self.player_info = player1
         if bool(player1):
