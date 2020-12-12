@@ -304,3 +304,88 @@ def explore(current_game_state, pos: PlayerInfo):
         return move_once(current_game_state, closest_undiscovered)
     else:
         return max_dir_action
+
+
+def near_bazar(pos:PlayerInfo):
+    return ((pos.x == 10 or pos.x == 14) and 10 <= pos.y <= 14) \
+           or ((pos.y == 10 or pos.y == 14) and 10 <= pos.x <= 14)
+
+
+def resolve_trade_action(player_totems, bazar_totems, totem_to_sell):
+
+    player_total_cnt = 0
+    player_totems_cnt = {}
+    for totem in player_totems:
+        if totem['totemType'] not in player_totems_cnt:
+            player_totems_cnt[totem['totemType']] = 0
+        player_totems_cnt[totem['totemType']] += 1
+        player_total_cnt += 1
+
+    bazar_totems_cnt = {}
+    for totem in bazar_totems:
+        if totem['totemType'] not in bazar_totems_cnt:
+            bazar_totems_cnt[totem['totemType']] = 0
+        bazar_totems_cnt[totem['totemType']] += 1
+
+    # if player doesn't have three parts, buy the totem part to sell
+    if player_total_cnt < 3:
+        # try to buy unique totem part
+        for totem in bazar_totems:
+            if totem['totemType'] != totem_to_sell:
+                continue
+            return actions.buy_part(totem['id'])
+
+        # try to buy neutral
+        for totem in bazar_totems:
+            if totem['totemType'] != "NEUTRAL":
+                continue
+            return actions.buy_part(totem['id'])
+
+        print ("WUt2? error")
+
+    # if player has the totem, just sell it
+    if totem_to_sell in player_totems_cnt and player_totems_cnt[totem_to_sell] == 2 \
+        and "NEUTRAL" in player_totems_cnt and player_totems_cnt["NEUTRAL"] == 1:
+        return actions.sell_totem()
+
+    # missing totem unique part
+    if totem_to_sell not in player_totems_cnt or player_totems_cnt[totem_to_sell] != 2:
+        # try to trade part of another totem for this totem part
+        for totem in player_totems:
+            if totem['totemType'] == "NEUTRAL" or totem['totemType'] == totem_to_sell:
+                continue
+
+            # find totem to buy
+            for bazar_totem in bazar_totems:
+                if bazar_totem['totemType'] == totem_to_sell:
+                    return actions.trade_parts(totem['id'], bazar_totem['id'])
+
+        # try to trade NEUTRAL for this totem part
+        for totem in player_totems:
+            if totem['totemType'] != "NEUTRAL":
+                continue
+
+            # find totem to buy
+            for bazar_totem in bazar_totems:
+                if bazar_totem['totemType'] == totem_to_sell:
+                    return actions.trade_parts(totem['id'], bazar_totem['id'])
+
+    # missing totem neutral part
+    if totem_to_sell in player_totems_cnt and player_totems_cnt[totem_to_sell] == 2 and \
+        "NEUTRAL" not in player_totems_cnt:
+
+        # find the part not needed
+        for totem in player_totems:
+            if totem['totemType'] == totem_to_sell:
+                continue
+
+            # find totem to buy
+            for bazar_totem in bazar_totems:
+                if bazar_totem['totemType'] == "NEUTRAL":
+                    return actions.trade_parts(totem['id'], bazar_totem['id'])
+
+    print("WUT? error!")
+
+
+
+

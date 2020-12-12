@@ -1,6 +1,6 @@
 from Bot import Bot
 from GameState import GameState
-import utils
+from utils import *
 import random
 import math
 from utils import shopping_tiles, find_path_to, dist
@@ -80,4 +80,41 @@ class PolicyCantSellNextTurn(Policy):
         if min_path == turns_left: print("Cant sell next turn")
         return min_path == turns_left
         
-        
+class PolicyNearBazarCanMakeTotem(Policy):
+    def __init__(self, Bot: Bot):
+        Policy.__init__(self, Bot)
+
+    def should_execute(self, current_game_state: GameState):
+        self_info = current_game_state.self_info
+        if not near_bazar(self_info):
+            return False
+
+        totems = {}
+        for part in self_info.player_info['parts']:
+            if part['totemType'] not in totems:
+                totems[part['totemType']] = 0
+            totems[part['totemType']] += 1
+        for totem in current_game_state.last_report['tradeCenter']['partsTC']:
+            if totem['totemType'] not in totems:
+                totems[totem['totemType']] = 0
+            totems[totem['totemType']] += 1
+
+        totem_to_buy = None
+        for totemType in totems:
+            if totemType == "NEUTRAL":
+                continue
+            if totems[totemType] == 2 and 'NEUTRAL' in totems:
+                totem_to_buy = totemType
+
+        have_money_for_totem = len(self_info.player_info['parts']) == 3
+        have_money_for_totem = have_money_for_totem or (len(self_info.player_info['parts']) == 2 and self_info.player_info['money'] >= 450)
+        have_money_for_totem = have_money_for_totem or (len(self_info.player_info['parts']) == 1 and self_info.player_info['money'] >= 900)
+        have_money_for_totem = have_money_for_totem or (len(self_info.player_info['parts']) == 0 and self_info.player_info['money'] >= 1350)
+
+        return totem_to_buy is not None and have_money_for_totem
+
+
+
+
+
+
