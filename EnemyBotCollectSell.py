@@ -36,7 +36,7 @@ class EnemyBotCollectSell(Bot):
             if curr_tile['part'] is not None:
                 return actions.collect()
 
-        dig_tiles = get_all_non_digged(current_game_state.map, self_info)
+        dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
 
         if len(dig_tiles) != 0:
             return get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),

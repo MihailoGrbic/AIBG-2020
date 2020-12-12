@@ -2,7 +2,7 @@ from BotStateMachine import BotStateMachine
 from utils import *
 import actions
 
-class EnemyBotCollectTotem(BotStateMachine):
+class EnemyBotCollectTotemFromCenter(BotStateMachine):
 
     def get_action_and_state(self, current_game_state: GameState, bot_state):
 
@@ -10,27 +10,41 @@ class EnemyBotCollectTotem(BotStateMachine):
         curr_tile = current_game_state.map.tiles[self_info.y][self_info.x]
 
         if bot_state == 'initial':
+            goal = (14, 14)
+
+            if goal[0] == self_info.x and goal[1] == self_info.y:
+                return 'first_dig', actions.down()
+
+            return 'initial', get_next_action_towards(current_game_state.map, current_game_state.other_info,
+                                                        (self_info.x, self_info.y),
+                                                        goal)
+
+        elif bot_state == 'first_dig':
 
             if curr_tile['tileType'] == "DIGTILE":
                 if curr_tile["dug"] == False:
-                    return 'initial', actions.dig()
+                    return 'first_dig', actions.dig()
                 if curr_tile['part'] is not None:
                     current_game_state.internal_bot_state['other_tile_pos'] = get_symetric_pos(current_game_state.map, self_info.pos)
                     if curr_tile['part']['totemType'] != "NEUTRAL":
-                        return 'other_part', actions.collect()
+                        if len(self_info.player_info['parts']) == 3:
+                            neutral_part_id = None
+                            for part in self_info.player_info['parts']:
+                                if part['totemType'] == "NEUTRAL":
+                                    neutral_part_id = part['id']
+                            return 'other_part', actions.swap_part(neutral_part_id)
+                        else:
+                            return 'other_part', actions.collect()
+                    if curr_tile['part']['totemType'] == "NEUTRAL" and len(self_info.player_info['parts']) < 3:
+                        return 'first_dig', actions.collect()
 
             dig_tiles = get_all_non_digged(current_game_state.map, (self_info.x, self_info.y))
 
             if len(dig_tiles) != 0:
-                return 'initial', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
+                return 'first_dig', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                sol = get_discovery_tiles_per_direction(current_game_state.map, self_info)
-                print(sol)
-                allactions = [actions.up(), actions.down(), actions.left(), actions.right()]
-                max_ = max([sol[action] for action in allactions])
-                only_max_actions = [action for action in allactions if sol[action] == max_]
-                return 'initial', random.choice(only_max_actions)
+                return 'first_dig', explore(current_game_state, self_info.pos)
 
         elif bot_state == 'other_part':
             pos_to_go = current_game_state.internal_bot_state['other_tile_pos']
@@ -39,13 +53,23 @@ class EnemyBotCollectTotem(BotStateMachine):
                 if curr_tile["dug"] == False:
                     return 'other_part', actions.dig()
                 if curr_tile['part'] is not None:
-                    return 'find_neutral', actions.collect()
+                        if len(self_info.player_info['parts']) == 3:
+                            neutral_part_id = None
+                            for part in self_info.player_info['parts']:
+                                if part['totemType'] == "NEUTRAL":
+                                    neutral_part_id = part['id']
+                            return 'find_neutral', actions.swap_part(neutral_part_id)
+                        else:
+                            return 'find_neutral', actions.collect()
 
             return 'other_part', get_next_action_towards(current_game_state.map, current_game_state.other_info,
                                                       (self_info.x, self_info.y),
                                                       pos_to_go)
 
         elif bot_state == 'find_neutral':
+            if len(self_info.player_info['parts']) == 3:
+                return 'sell', actions.down()
+
             if curr_tile['tileType'] == "DIGTILE":
                 if curr_tile["dug"] == False:
                     return 'find_neutral', actions.dig()
@@ -59,12 +83,7 @@ class EnemyBotCollectTotem(BotStateMachine):
                 return 'find_neutral', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                              (dig_tiles[0][0], dig_tiles[0][1]))
             else:
-                sol = get_discovery_tiles_per_direction(current_game_state.map, self_info)
-                print(sol)
-                allactions = [actions.up(), actions.down(), actions.left(), actions.right()]
-                max_ = max([sol[action] for action in allactions])
-                only_max_actions = [action for action in allactions if sol[action] == max_]
-                return 'find_neutral', random.choice(only_max_actions)
+                return 'find_neutral', explore(current_game_state, self_info.pos)
 
         elif bot_state == 'sell':
             bazar_locs = [
