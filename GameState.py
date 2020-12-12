@@ -25,6 +25,7 @@ class GameState(object):
 
         self.self_info = PlayerInfo(report['nextPlayerObject'])
         self.last_report = report
+        self.turns_left = report['turn']
         if bool(report['otherPlayerObject']):
             self.other_info = PlayerInfo(report['otherPlayerObject'])
             self.opponent_visible = True
