@@ -58,6 +58,8 @@ class GameState(object):
     def update_totem_locations(self, report):
         for y, row in enumerate(self.map.tiles):
             for x, tile in enumerate(row):
+                if not bool(tile):
+                    continue
                 # if (x, y) in self.totem_locations.values():
                 if tile["tileType"] is "DIGTILE" and tile["dug"] is True:
                     part_id = tile["part"].get("id", None)
