@@ -18,5 +18,5 @@ class Bot(object):
     def resolve_policy(self, current_game_state: GameState) -> Bot:
         for policy in self.get_policy_list():
             if policy.should_execute(current_game_state):
-                return policy.bhvr
+                return policy.bot
         return None

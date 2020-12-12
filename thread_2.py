@@ -1,12 +1,11 @@
 from GamePlay import GamePlay
-from BotRotate import BotRotate as Bot
-from EnemyBotCollectSell import EnemyBotCollectSell
+from BotBodyBlock import BotBodyBlock
 
-gameId = 9
-playerOne = 0
-playerTwo = 1
+gameId = 1
+playerOne = 1
+playerTwo = 2
 
-gamePlay = GamePlay('http://localhost:9080', gameId, playerTwo, EnemyBotCollectSell())
+gamePlay = GamePlay('http://localhost:9080', gameId, playerTwo, BotBodyBlock())
 
 gamePlay.play()
 

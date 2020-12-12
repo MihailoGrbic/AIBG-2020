@@ -2,6 +2,7 @@ from PlayerInfo import PlayerInfo
 from Map import Map
 from PlayerInfo import PlayerInfo
 from pprint import pprint
+from GameState import GameState
 import actions
 from typing import List
 
@@ -118,6 +119,23 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
 
             # Add the child to the open list
             open_list.append(child)
+
+def move_once(current_game_state: GameState, target):
+    self_info = current_game_state.self_info.player_info
+    path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), target)
+    print(path)
+    if len(path) == 1:
+        print("Error, cant move arrived at target")
+        return "None"
+    x_diff = path[1][0] - self_info['x']
+    y_diff = path[1][1] - self_info['y']
+    if x_diff == 1:
+        return actions.right()
+    if x_diff == -1:
+        return actions.left()
+    if y_diff == 1:
+        return actions.down()
+    return actions.up()
 
 
 def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x, y):

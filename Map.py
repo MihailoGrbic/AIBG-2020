@@ -8,7 +8,7 @@ class Map(object):
 
         self.items = []
 
-    def reverse_corr(x, y):
+    def reverse_corr(self, x, y):
         r_x = self.width - x - 1
         r_y = self.height - y - 1
         return r_x, r_y
