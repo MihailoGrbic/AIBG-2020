@@ -27,16 +27,16 @@ def sub_vector(vec1: tuple, vec2: tuple) -> tuple:
     return vec1[0] - vec2[0], vec1[1] - vec2[1]
 
 
-def move_available(current_map: Map, other_player: PlayerInfo, pos, damage_tolerant = False, sandtrap_tolerant = False):
+def move_available(current_map: Map, other_player: PlayerInfo, pos, damage_tolerant=False, sandtrap_tolerant=False):
     # TODO: Check how we store unpassable data
     x, y = pos
     if 0 <= x < current_map.width and 0 <= y < current_map.height:
-        blocked = 'tileType' in current_map.tiles[y][x] and current_map.tiles[y][x]['tileType'] == 'BLOCKTILE'
-        player_trap = not damage_tolerant and 'is_trap' in current_map.tiles[y][x] and current_map.tiles[y][x]['trap_type'] == 'PLAYERTRAP'
-        posion_trap = not damage_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x]['trap_type'] == 'SCORPION'
-        sand_trap = not sandtrap_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x]['trap_type'] == 'QUICKSAND'
+        blocked = current_map.tiles[y][x].get('tileType', None) == 'BLOCKTILE'
+        player_trap = not damage_tolerant and current_map.tiles[y][x].get('trap_type', None) == 'PLAYERTRAP'
+        poison_trap = not damage_tolerant and current_map.tiles[y][x].get('trap_type', None) == 'SCORPION'
+        sand_trap = not sandtrap_tolerant and current_map.tiles[y][x].get('trap_type', None) == 'QUICKSAND'
         other_player_there = other_player.x != -1 and (other_player.x == x and other_player.y == y)
-        return not blocked and not other_player_there and not player_trap and not posion_trap and not sand_trap
+        return not blocked and not other_player_there and not player_trap and not poison_trap and not sand_trap
 
 
 def can_move(current_map: Map, other_player: PlayerInfo, self_pos):
@@ -148,7 +148,7 @@ def move_once(current_game_state: GameState, target):
     self_info = current_game_state.self_info.player_info
     path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), target)
     print(path)
-    if len(path) == 1:
+    if path is None or len(path) == 1:
         print("Error, cant move arrived at target")
         return "None"
     x_diff = path[1][0] - self_info['x']
@@ -224,6 +224,7 @@ def get_discovery_tiles_per_direction(map: Map, curr_pos: PlayerInfo) -> dict:
 
 def calc_new_tiles(map: Map, pos: (int, int)):
     # calculates all new tiles that will be discovered if player mozes to pos
+    # TODO: PlayerInfo({}) should be fixed
     if not move_available(map, PlayerInfo({}), pos):
         return -1
 
@@ -248,17 +249,17 @@ def random_movement_action():
 
 
 def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: list, start: tuple) -> tuple:
-    dist_map = [[-1 for j in map.size] for i in map.size]
-    undiscovered = [start]
-    while len(undiscovered) > 0:
-        current = undiscovered[0]
-        undiscovered.remove(0)
+    reached = [start]
+    while len(reached) > 0:
+        current = reached[0]
+        reached.remove(current)
         for direction in actions.move_actions:
             target = add_vector(current, dir_to_diff[direction])
             if target in undiscovered:
                 return target
             if move_available(map, other_info, target):
-                undiscovered.append(direction)
+                reached.append(direction)
+
 
 def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
     path = astar(maze, other_player, start, end)
@@ -276,4 +277,3 @@ def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
 
 def get_symetric_pos(map: Map, pos: (int, int)):
     return (map.width - pos[0] - 1, map.height - pos[1] - 1)
-
