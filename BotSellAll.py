@@ -16,8 +16,8 @@ class BotSellAll(Bot):
                 target_y = tile[1]
         
         if current_game_state.self_info.x == target_x and current_game_state.self_info.y == target_y:
-            for part_id in current_game_state.self_info.player_info['parts']:
-                return actions.sell_part(part_id)
+            for part in current_game_state.self_info.player_info['parts']:
+                return actions.sell_part(part["id"])
 
         return move_once(current_game_state, target=(target_x, target_y))
         

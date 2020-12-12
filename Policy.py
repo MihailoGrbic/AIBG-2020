@@ -3,7 +3,7 @@ from GameState import GameState
 import utils
 import random
 import math
-from utils import shopping_tiles, find_path_to
+from utils import shopping_tiles, find_path_to, dist
 
 class Policy:
     def __init__(self, bot: Bot):
@@ -36,6 +36,19 @@ class PolicyAllowOnce(Policy):
 class PolicyEnemyFound(Policy):
     def should_execute(self, current_game_state: GameState):
         return current_game_state.opponent_visible
+
+class PolicyEnemyNearby(Policy):
+    def __init__(self, Bot: Bot, turn_tolerance = 4):
+        Policy.__init__(self, Bot)
+        self.turn_tolerance = turn_tolerance
+
+    def should_execute(self, current_game_state: GameState):
+        if "ExpectedEnemyPosition" not in current_game_state.internal_bot_state:
+            return False
+        enemy_pos = current_game_state.internal_bot_state["ExpectedEnemyPosition"]
+        perceived_distance = dist((current_game_state.self_info.x, current_game_state.self_info.y), (enemy_pos[0], enemy_pos[1]))
+        return perceived_distance < 5 and current_game_state.internal_bot_state["TurnsSinceSeenEnemy"] < self.turn_tolerance
+        
 
 class PolicyPartNumber(Policy):
     # Executes if a bot needs more or less parts, if want_more is true any number of items less than the ideal 

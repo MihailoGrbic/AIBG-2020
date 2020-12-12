@@ -6,7 +6,7 @@ from BotRushOnePart import BotRushOnePart
 from BotGuardShop import BotGuardShop
 from BotSellAll import BotSellAll
 from GameState import GameState
-from Policy import PolicyAllowOnce, PolicyEnemyFound, PolicyAlwaysAllow, PolicyPartNumber, PolicyCantSellNextTurn
+from Policy import PolicyAllowOnce, PolicyEnemyFound, PolicyAlwaysAllow, PolicyPartNumber, PolicyCantSellNextTurn, PolicyEnemyNearby
 from utils import shopping_tiles
 
 
@@ -18,10 +18,9 @@ class BotCompetitiveBodyBlock(Bot):
         policy_list = []
         policy_list.append(PolicyCantSellNextTurn(BotSellAll()))
         policy_list.append(PolicyPartNumber(BotRushOnePart()))
-        policy_list.append(PolicyAlwaysAllow(BotSellAll()))
         policy_list.append(PolicyEnemyFound(BotBodyBlock(shopping_tiles, self.expected_jukes)))
-        
-        # policy_list.append(PolicyAlwaysAllow(BotGuardShop()))
+        policy_list.append(PolicyEnemyNearby(BotBodyBlock(shopping_tiles, self.expected_jukes)))
+        policy_list.append(PolicyAlwaysAllow(BotGuardShop()))
         return policy_list
 
     def play_single_turn(self, current_game_state: GameState):
