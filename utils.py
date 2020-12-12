@@ -3,10 +3,11 @@ from Map import Map
 from PlayerInfo import PlayerInfo
 from pprint import pprint
 import actions
+from typing import List
 
 
-def dist(x1, y1, x2, y2):
-    return abs(x1 - x2) + abs(y1 - y2)
+def dist(pos1, pos2):
+    return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
 
 def move_available(current_map: Map, other_player: PlayerInfo, x, y):
@@ -141,13 +142,13 @@ def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x
 
 def direction(pos1: tuple, pos2: tuple) -> str:
     if pos1[1] == pos2[1] - 1:
-        return 'w'
+        return actions.up()
     if pos1[0] == pos2[0] - 1:
-        return 'a'
+        return actions.left()
     if pos1[1] == pos2[1] + 1:
-        return 's'
+        return actions.down()
     if pos1[0] == pos2[0] + 1:
-        return 'd'
+        return actions.right()
 
 
 def get_all_non_digged(map: Map, currpos):
@@ -159,8 +160,25 @@ def get_all_non_digged(map: Map, currpos):
                     and map.tiles[y][x]["dug"] == False:
                 tiles.append((x, y))
 
-    tiles = sorted(tiles, key=lambda digtile: dist(currpos.x, currpos.y, digtile[0], digtile[1]))
+    tiles = sorted(tiles, key=lambda digtile: dist((currpos.x, currpos.y), digtile))
     return tiles
+
+
+def get_all_undiscovered_tiles(map: Map):
+    tiles = []
+    for x in range(map.size):
+        for y in range(map.size):
+            if not bool(map.tiles[y][x]):
+                tiles.append((x, y))
+
+
+def find_closest_coordinate(pos: tuple, tiles: List[tuple]):
+    best = (-1, -1)
+    best_dist = 1000
+    for tile in tiles:
+        if dist(pos, tile) < best_dist:
+            best = tile
+    return best
 
 
 def get_discovery_tiles_per_direction(map: Map, currpos):
@@ -173,6 +191,7 @@ def get_discovery_tiles_per_direction(map: Map, currpos):
 
 
 def calc_new_tiles(map: Map, pos: (int, int)):
+    # calculates all new tiles that will be discovered if player mozes to pos
     if not within_bounds(map, pos):
         return -1
     new_tile_cnt = 0

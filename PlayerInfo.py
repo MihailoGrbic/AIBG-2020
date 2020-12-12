@@ -29,4 +29,4 @@ class PlayerInfo(object):
         else:
             self.x = -1
             self.y = -1
-
+        self.pos = (self.x, self.y)
