@@ -8,7 +8,7 @@ def bail_out(): return "bailOut"
 # digging collecting placing
 def dig(): return "dig"
 def bury(): return "bury"
-def collect(): return "d"
+def collect(): return "collect"
 def drop_part(part_id): return f"dropPart-{part_id}"
 def swap_part(part_id): return f"swapPart-{part_id}"
 def place_trap(): return "trap"
