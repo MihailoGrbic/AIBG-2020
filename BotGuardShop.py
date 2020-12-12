@@ -35,12 +35,16 @@ class BotGuardShop(Bot):
             self.target_index += 1
             if self.target_index == len(targets):
                 self.target_index = 0
-
+        print("dosao")
         # print(targets)
         # print(targets[self.target_index])
         target = targets[self.target_index]
-        if "RememberEnemyPosition" in current_game_state.internal_bot_state and current_game_state.internal_bot_state["TurnsSinceSeenEnemy"] <8:
-            closest = find_closest_coordinate(current_game_state.internal_bot_state["RememberEnemyPosition"], shopping_tiles)
+        if "RememberEnemyPosition" in current_game_state.internal_bot_state and current_game_state.internal_bot_state["TurnsSinceSeenEnemy"] < 8:
+            print("dosao sam ovde1")
+            print(current_game_state.internal_bot_state["RememberEnemyPosition"])
+            closest = find_closest_coordinate(current_game_state.internal_bot_state["RememberEnemyPosition"], shopping_tiles, current_game_state.map, current_game_state.other_info)
+            print("wtf")
             print(closest)
             target = closest
+            print("dosao sam ovde")
         return move_once(current_game_state, target = (target[0], target[1]))

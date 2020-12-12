@@ -19,6 +19,9 @@ shopping_tiles = [[10,10], [10,11], [10,12], [10,13], [10,14], [14,10], [14,11],
 def dist(pos1: tuple, pos2: tuple) -> int:
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
+def astar_dist(pos1: tuple, pos2: tuple, map: Map, other_player: PlayerInfo) -> int:
+    return len(astar(map, other_player, pos1, pos2))
+
 
 def add_vector(vec1: tuple, vec2: tuple) -> tuple:
     return vec1[0] + vec2[0], vec1[1] + vec2[1]
@@ -216,13 +219,16 @@ def get_all_undiscovered_tiles(map: Map):
     return tiles
 
 
-def find_closest_coordinate(pos: tuple, tiles: List[tuple]):
+def find_closest_coordinate(pos: tuple, tiles: List[tuple], map: Map, other_player: PlayerInfo):
     best = (-1, -1)
     best_dist = 1000
+    print(tiles)
+    print(pos)
     for tile in tiles:
-        if dist(pos, tile) < best_dist:
+        astar_len = len(astar(map, other_player, pos, tile))
+        if astar_len < best_dist:
             best = tile
-            best_dist = dist(pos, tile)
+            best_dist = astar_len
     return best
 
 

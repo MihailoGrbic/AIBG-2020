@@ -3,7 +3,7 @@ from GameState import GameState
 from utils import *
 import random
 import math
-from utils import shopping_tiles, find_path_to, dist
+from utils import shopping_tiles, find_path_to, astar_dist
 
 class Policy:
     def __init__(self, bot: Bot):
@@ -46,7 +46,7 @@ class PolicyEnemyNearby(Policy):
         if "ExpectedEnemyPosition" not in current_game_state.internal_bot_state:
             return False
         enemy_pos = current_game_state.internal_bot_state["ExpectedEnemyPosition"]
-        perceived_distance = dist((current_game_state.self_info.x, current_game_state.self_info.y), (enemy_pos[0], enemy_pos[1]))
+        perceived_distance = astar_dist((current_game_state.self_info.x, current_game_state.self_info.y), (enemy_pos[0], enemy_pos[1]), current_game_state.map, current_game_state.other_info)
         return perceived_distance < 5 and current_game_state.internal_bot_state["TurnsSinceSeenEnemy"] < self.turn_tolerance
         
 
@@ -76,8 +76,8 @@ class PolicyCantSellNextTurn(Policy):
         min_path = 100
         for tile in shopping_tiles:
             path = find_path_to(current_game_state.self_info, current_game_state.other_info, current_game_state.map, tile[0], tile[1])
-            if min_path > len(path) - 5:
-                min_path = len(path) - 5
+            if min_path > len(path) + 2:
+                min_path = len(path) + 2
 
         if min_path > turns_left: print("Cant sell next turn")
         return min_path > turns_left
