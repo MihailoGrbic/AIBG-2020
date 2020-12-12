@@ -1,13 +1,12 @@
 from Bot import Bot
-import utils
 from GameState import GameState
 import utils
 import random
 
 
 class Policy:
-    def __init__(self, Bot: Bot):
-        self.bot = Bot
+    def __init__(self, bot: Bot):
+        self.bot = bot
 
     def should_execute(self, current_game_state: GameState):
         pass

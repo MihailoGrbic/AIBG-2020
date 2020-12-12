@@ -4,10 +4,12 @@ from PlayerInfo import PlayerInfo
 from pprint import pprint
 from GameState import GameState
 import actions
+from typing import List
+import random
 
 
-def dist(x1, y1, x2, y2):
-    return abs(x1 - x2) + abs(y1 - y2)
+def dist(pos1, pos2):
+    return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
 def tile_safe(current_map: Map, x, y, damage_tolerant = False, sandtrap_tolerant = False):
     #Cekamo Soskica
@@ -17,7 +19,8 @@ def move_available(current_map: Map, other_player: PlayerInfo, x, y):
     # TODO: Check how we store unpassable data
     if 0 <= x < current_map.width and 0 <= y < current_map.height:
         blocked = 'tileType' in current_map.tiles[y][x] and current_map.tiles[y][x]['tileType'] == 'BLOCKTILE'
-        other_player_there = other_player.x != -1 and (other_player.x != x or other_player.y != y)
+        trap = 'is_trap' in  current_map.tiles[y][x]
+        other_player_there = other_player.x != -1 and (other_player.x == x and other_player.y == y)
         return not blocked and not other_player_there
 
 
@@ -122,6 +125,7 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
             # Add the child to the open list
             open_list.append(child)
 
+
 def move_once(current_game_state: GameState, target):
     self_info = current_game_state.self_info.player_info
     path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), target)
@@ -162,13 +166,13 @@ def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x
 
 def direction(pos1: tuple, pos2: tuple) -> str:
     if pos1[1] == pos2[1] - 1:
-        return 'w'
+        return actions.up()
     if pos1[0] == pos2[0] - 1:
-        return 'a'
+        return actions.left()
     if pos1[1] == pos2[1] + 1:
-        return 's'
+        return actions.down()
     if pos1[0] == pos2[0] + 1:
-        return 'd'
+        return actions.right()
 
 
 def get_all_non_digged(map: Map, currpos):
@@ -180,22 +184,42 @@ def get_all_non_digged(map: Map, currpos):
                     and map.tiles[y][x]["dug"] == False:
                 tiles.append((x, y))
 
-    tiles = sorted(tiles, key=lambda digtile: dist(currpos.x, currpos.y, digtile[0], digtile[1]))
+    tiles = sorted(tiles, key=lambda digtile: dist((currpos.x, currpos.y), digtile))
     return tiles
 
 
-def get_discovery_tiles_per_direction(map: Map, currpos):
-    sol = {}
-    sol[actions.up()] = calc_new_tiles(map, (currpos.x, currpos.y - 1))
-    sol[actions.down()] = calc_new_tiles(map, (currpos.x, currpos.y + 1))
-    sol[actions.left()] = calc_new_tiles(map, (currpos.x - 1, currpos.y))
-    sol[actions.right()] = calc_new_tiles(map, (currpos.x + 1, currpos.y))
+def get_all_undiscovered_tiles(map: Map):
+    tiles = []
+    for x in range(map.size):
+        for y in range(map.size):
+            if not bool(map.tiles[y][x]):
+                tiles.append((x, y))
+    return tiles
+
+
+def find_closest_coordinate(pos: tuple, tiles: List[tuple]):
+    best = (-1, -1)
+    best_dist = 1000
+    for tile in tiles:
+        if dist(pos, tile) < best_dist:
+            best = tile
+    return best
+
+
+def get_discovery_tiles_per_direction(map: Map, curr_pos: PlayerInfo) -> dict:
+    sol = dict()
+    sol[actions.up()] = calc_new_tiles(map, (curr_pos.x, curr_pos.y - 1))
+    sol[actions.down()] = calc_new_tiles(map, (curr_pos.x, curr_pos.y + 1))
+    sol[actions.left()] = calc_new_tiles(map, (curr_pos.x - 1, curr_pos.y))
+    sol[actions.right()] = calc_new_tiles(map, (curr_pos.x + 1, curr_pos.y))
     return sol
 
 
 def calc_new_tiles(map: Map, pos: (int, int)):
-    if not within_bounds(map, pos):
+    # calculates all new tiles that will be discovered if player mozes to pos
+    if not move_available(map, PlayerInfo({}), pos[0], pos[1]):
         return -1
+
     new_tile_cnt = 0
     for xi in range(-3, 3, 1):
         for yi in range(-3, 3, 1):
@@ -210,3 +234,7 @@ def calc_new_tiles(map: Map, pos: (int, int)):
 
 def within_bounds(map: Map, pos: (int, int)):
     return 0 <= pos[0] < map.width and 0 <= pos[1] < map.height
+
+
+def random_movement_action():
+    random.choice([actions.up(), actions.down(), actions.left(), actions.right()])

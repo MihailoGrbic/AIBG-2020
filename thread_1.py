@@ -2,9 +2,9 @@ from GamePlay import GamePlay
 from BotJustBlockShop import BotJustBlockShop
 from Client import get
 
-gameId = 1
-playerOne = 1
-playerTwo = 2
+gameId = 12
+playerOne = 0
+playerTwo = 1
 
 get("http://localhost:9080/admin/createGame?gameId=" + str(gameId) +
     "&playerOne=" + str(playerOne) +
