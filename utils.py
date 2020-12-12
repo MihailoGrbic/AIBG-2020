@@ -214,10 +214,12 @@ def get_all_undiscovered_tiles(map: Map):
 def find_closest_coordinate(pos: tuple, tiles: List[tuple], map: Map, other_player: PlayerInfo):
     best = (-1, -1)
     best_dist = 1000
+    print("tiles")
     print(tiles)
     print(pos)
     for tile in tiles:
-        astar_len = len(astar(map, other_player, pos, tile))
+        astar_len = dist(pos, tile)
+        #len(astar(map, other_player, pos, tile))
         if astar_len < best_dist:
             best = tile
             best_dist = astar_len
