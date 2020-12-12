@@ -32,11 +32,11 @@ def move_available(current_map: Map, other_player: PlayerInfo, pos, damage_toler
     x, y = pos
     if 0 <= x < current_map.width and 0 <= y < current_map.height:
         blocked = 'tileType' in current_map.tiles[y][x] and current_map.tiles[y][x]['tileType'] == 'BLOCKTILE'
-        player_trap = not damage_tolerant and 'is_trap' in current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'PLAYERTRAP'
-        posion_trap = not damage_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'SCORPION'
-        sand_trap = not sandtrap_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'QUICKSAND'
+        player_trap = not damage_tolerant and 'is_trap' in current_map.tiles[y][x] and current_map.tiles[y][x]['trap_type'] == 'PLAYERTRAP'
+        posion_trap = not damage_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x]['trap_type'] == 'SCORPION'
+        sand_trap = not sandtrap_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x]['trap_type'] == 'QUICKSAND'
         other_player_there = other_player.x != -1 and (other_player.x == x and other_player.y == y)
-        return not blocked and not other_player_there and not player_trap and not posion_trap and sand_trap
+        return not blocked and not other_player_there and not player_trap and not posion_trap and not sand_trap
 
 
 def can_move(current_map: Map, other_player: PlayerInfo, self_pos):
@@ -63,6 +63,9 @@ class Node():
 
 def astar(maze: Map, other_player: PlayerInfo, start, end):
     """Returns a list of tuples as a path from the given start to the given end in the given maze"""
+
+    print(start)
+    print(end)
 
     # Create start and end node
     start_node = Node(None, start)
