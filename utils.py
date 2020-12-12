@@ -182,13 +182,15 @@ def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x
     return path_wasd
 
 
-def get_all_non_digged(map: Map, currpos):
+def get_all_non_digged(map: Map, currpos: (int, int)):
     tiles = []
     for x in range(map.width):
         for y in range(map.height):
             if 'tileType' in map.tiles[y][x] \
                     and map.tiles[y][x]['tileType'] == "DIGTILE" \
-                    and map.tiles[y][x]["dug"] == False:
+                    and ('dig' not in map.tiles[y][x]
+                         or map.tiles[y][x]["dug"] == False
+                         or 'totemType' in map.tiles[y][x]['dug']['parts']):
                 tiles.append((x, y))
 
     tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))
@@ -279,3 +281,22 @@ def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
 
 def get_symetric_pos(map: Map, pos: (int, int)):
     return (map.width - pos[0] - 1, map.height - pos[1] - 1)
+
+
+def explore(current_game_state: GameState, pos: PlayerInfo):
+    sol = get_discovery_tiles_per_direction(current_game_state.map, pos)
+    print(sol)
+    allactions = [actions.up(), actions.down(), actions.left(), actions.right()]
+    max_ = max([sol[action] for action in allactions])
+    only_max_actions = [action for action in allactions if sol[action] == max_]
+    max_dir_action = random.choice(only_max_actions)
+
+    if max_ == 0:
+        closest_undiscovered = find_closest_undiscovered(
+            current_game_state.map,
+            PlayerInfo({}),
+            get_all_undiscovered_tiles(current_game_state.map),
+            (pos.x, pos.y))
+        return move_once(current_game_state, closest_undiscovered)
+    else:
+        return max_dir_action
