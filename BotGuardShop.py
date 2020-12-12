@@ -13,17 +13,20 @@ class BotGuardShop(Bot):
 
         targets = [[10, 10], [10, 14], [14, 12]]
 
-        if current_game_state.turns_left >= 2000-200:
+        if current_game_state.turns_left >= 2000-150:
             if initX == 0:
                 targets = [[14, 11], [14, 13]]
             else:
                 targets = [[10, 11], [10, 13]]
 
-        if current_game_state.turns_left >= 2000-120:
+        if current_game_state.turns_left >= 2000-100:
+            print(current_game_state.turns_left)
             if initX == 0:
                 targets = [[14, 14], [14, 13]]
             else:
                 targets = [[10, 10], [10, 11]]
+
+        # print(targets)
 
         x = current_game_state.self_info.x
         y = current_game_state.self_info.y
