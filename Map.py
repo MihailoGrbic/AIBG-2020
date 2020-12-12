@@ -1,4 +1,8 @@
-class Tile:
+from collections.abc import MutableMapping
+from typing import _KT, Optional, _VT_co, overload, Union, _T
+
+
+class Tile(MutableMapping):
 
     def __init__(self, tile: dict):
         self.tile = tile
@@ -28,6 +32,9 @@ class Tile:
 
     def __bool__(self):
         return bool(self.tile)
+
+    def get(self, k, default=None):
+        return self.tile.get(k)
 
 
 def create_tile_map(res_tiles) -> list:
