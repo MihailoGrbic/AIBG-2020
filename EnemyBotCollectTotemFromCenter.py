@@ -146,6 +146,9 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
                 else:
                     return 'sell', actions.sell_part(self_info.player_info['parts'][0]['id'])
 
+            if dist(loc_to_go, self_info.pos) == 0:
+                # another policy already sell
+                return 'initial', actions.down()
 
             return 'sell', get_next_action_towards(current_game_state.map, current_game_state.other_info, (self_info.x, self_info.y),
                          (loc_to_go[0], loc_to_go[1]))
