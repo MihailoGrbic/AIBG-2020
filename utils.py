@@ -14,7 +14,7 @@ def move_available(current_map: Map, other_player: PlayerInfo, x, y):
     # TODO: Check how we store unpassable data
     if 0 <= x < current_map.width and 0 <= y < current_map.height:
         blocked = 'tileType' in current_map.tiles[y][x] and current_map.tiles[y][x]['tileType'] == 'BLOCKTILE'
-        other_player_there = other_player.x != -1 and (other_player.x != x or other_player.y != y)
+        other_player_there = other_player.x != -1 and (other_player.x == x and other_player.y == y)
         return not blocked and not other_player_there
 
 
