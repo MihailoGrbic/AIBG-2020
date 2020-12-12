@@ -18,6 +18,9 @@ class Tile:
         if key == "BLOCKTILE":
             self.blocked = True
 
+    def __contains__(self, item):
+        return item in self.tile
+
 
 def create_tile_map(res_tiles) -> list:
     tiles = []
