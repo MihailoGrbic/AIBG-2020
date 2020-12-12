@@ -15,6 +15,5 @@ class BotGoTo(Bot):
 
     def finished(self, current_game_state: GameState):
         if current_game_state.self_info.x == self.x and current_game_state.self_info.y == self.y:
-            print("kurac")
             return True
 
