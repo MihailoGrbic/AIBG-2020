@@ -17,12 +17,14 @@ class GameState(object):
         self.totem_locations = {10 * i + j: None for i in range(1, 8) for j in [1, 2]}.update(
             {80 + i: None for i in range(7)}
         )  # Locations of each totem by its totem id
+        self.last_report = res
 
     def update_game_state(self, report):
 
         # self.update_totem_locations(report)
 
         self.self_info = PlayerInfo(report['nextPlayerObject'])
+        self.last_report = report
         if bool(report['otherPlayerObject']):
             self.other_info = PlayerInfo(report['otherPlayerObject'])
             self.opponent_visible = True
