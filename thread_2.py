@@ -2,7 +2,7 @@ from GamePlay import GamePlay
 from BotBodyBlock import BotBodyBlock
 from  EnemyBotCollectSell import EnemyBotCollectSell
 
-gameId = 11
+gameId = 12
 playerOne = 0
 playerTwo = 1
 

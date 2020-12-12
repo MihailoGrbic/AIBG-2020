@@ -9,15 +9,15 @@ class GameState(object):
         self.game_state = res
         self.turns_left = res['turn']
         self.map = Map(res)
-        self.self_info = PlayerInfo(res, player1=res['nextPlayerObject'])
-        self.other_info = PlayerInfo(res, player1=res['otherPlayerObject'])
+        self.self_info = PlayerInfo(res['nextPlayerObject'])
+        self.other_info = PlayerInfo(res['otherPlayerObject'])
         self.opponent_visible = False
 
     def update_game_state(self, report):
 
-        self.self_info = PlayerInfo(report, player1=report['nextPlayerObject'])
+        self.self_info = PlayerInfo(report['nextPlayerObject'])
         if bool(report['otherPlayerObject']):
-            self.other_info = PlayerInfo(report, player1=report['otherPlayerObject'])
+            self.other_info = PlayerInfo(report['otherPlayerObject'])
             self.opponent_visible = True
         else:
             self.opponent_visible = False

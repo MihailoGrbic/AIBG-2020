@@ -213,8 +213,9 @@ def get_discovery_tiles_per_direction(map: Map, currpos):
 
 def calc_new_tiles(map: Map, pos: (int, int)):
     # calculates all new tiles that will be discovered if player mozes to pos
-    if not within_bounds(map, pos):
+    if not move_available(map, PlayerInfo({}), pos[0], pos[1]):
         return -1
+
     new_tile_cnt = 0
     for xi in range(-3, 3, 1):
         for yi in range(-3, 3, 1):
