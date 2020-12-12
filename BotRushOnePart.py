@@ -30,7 +30,6 @@ class BotRushOnePart(Bot):
                     else:
                         return actions.collect()
 
-        print(current_game_state.turns_left)   
         return move_once(current_game_state, target=(target_x, target_y))
         
         

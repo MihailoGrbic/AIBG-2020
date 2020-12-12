@@ -4,6 +4,7 @@ from BotBodyBlock import BotBodyBlock
 from BotRandom import BotRandom
 from GameState import GameState
 from Policy import PolicyAllowOnce, PolicyEnemyFound, PolicyAlwaysAllow
+from utils import shopping_tiles
 
 
 class BotJustBlockShop(Bot):
@@ -16,8 +17,7 @@ class BotJustBlockShop(Bot):
             policy_list.append(PolicyAllowOnce(BotGoTo(10,10), 1))
 
         policy_list.append(
-            PolicyEnemyFound(BotBodyBlock([[10,10], [10,11], [10,12], [10,13], [10,14], [14,10], [14,11], 
-            [14,12], [14,13], [14,14], [11,10], [12,10], [13,10], [11,14], [12,14], [13,14]])))
+            PolicyEnemyFound(BotBodyBlock(shopping_tiles)))
         policy_list.append(PolicyAlwaysAllow(BotRandom()))
         
         return policy_list

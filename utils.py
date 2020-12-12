@@ -14,6 +14,8 @@ dir_to_diff = {
     actions.right(): (1, 0)
 }
 
+shopping_tiles = [[10,10], [10,11], [10,12], [10,13], [10,14], [14,10], [14,11], 
+            [14,12], [14,13], [14,14], [11,10], [12,10], [13,10], [11,14], [12,14], [13,14]]
 
 def dist(pos1: tuple, pos2: tuple) -> int:
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])

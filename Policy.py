@@ -2,7 +2,8 @@ from Bot import Bot
 from GameState import GameState
 import utils
 import random
-
+import math
+from utils import shopping_tiles, find_path_to
 
 class Policy:
     def __init__(self, bot: Bot):
@@ -50,4 +51,20 @@ class PolicyPartNumber(Policy):
             return len(current_game_state.self_info.player_info['parts']) < self.ideal_parts
         else:
             return len(current_game_state.self_info.player_info['parts']) > self.ideal_parts
+
+class PolicyCantSellNextTurn(Policy):
+    def __init__(self, Bot: Bot):
+        Policy.__init__(self, Bot)
+
+    def should_execute(self, current_game_state: GameState):
+        turns_left = math.ceil(current_game_state.turns_left / 2)
+
+        min_path = 100
+        for tile in shopping_tiles:
+            path = find_path_to(current_game_state.self_info, current_game_state.other_info, current_game_state.map, tile[0], tile[1])
+            if min_path > len(path) + 4:
+                min_path = len(path) + 4
+            
+        return min_path == turns_left
+        
         
