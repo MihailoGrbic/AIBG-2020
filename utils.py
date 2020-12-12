@@ -258,7 +258,6 @@ def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: li
     processed.add(start)
     while len(reached) > 0:
         current = reached[0]
-        print(len(reached))
         del reached[0]
         for direction in actions.move_actions:
             diff = dir_to_diff[direction]
