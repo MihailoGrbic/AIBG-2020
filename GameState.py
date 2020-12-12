@@ -42,3 +42,9 @@ class GameState(object):
                     r_x, r_y = self.map.reverse_corr(x, y)
                     self.map.update_tile(tile)
                     self.map.update_tile_reverse(r_x, r_y, tile)
+
+                    if 'trap' in tile and bool(tile['trap']):
+                        if tile['trap']['visible']:
+                            r_x, r_y = self.map.reverse_corr(x, y)
+                            self.map.mark_trap(x,y,tile['trap']['trapType'])
+                            self.map.mark_trap(r_x,r_y,tile['trap']['trapType'])
