@@ -199,7 +199,7 @@ def get_all_undiscovered_tiles(map: Map):
     tiles = []
     for x in range(map.size):
         for y in range(map.size):
-            if not bool(map.tiles[y][x]):
+            if not map.tiles[y][x]:
                 tiles.append((x, y))
     return tiles
 
@@ -259,3 +259,21 @@ def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: li
                 return target
             if move_available(map, other_info, target):
                 undiscovered.append(direction)
+
+def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
+    path = astar(maze, other_player, start, end)
+    print(path)
+    x_diff = path[1][0] - path[0][0]
+    y_diff = path[1][1] - path[0][1]
+    if x_diff == 1:
+        return actions.right()
+    if x_diff == -1:
+        return actions.left()
+    if y_diff == 1:
+        return actions.down()
+    return actions.up()
+
+
+def get_symetric_pos(map: Map, pos: (int, int)):
+    return (map.width - pos[0] - 1, map.height - pos[1] - 1)
+
