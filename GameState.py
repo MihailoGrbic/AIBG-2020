@@ -20,7 +20,7 @@ class GameState(object):
 
     def update_game_state(self, report):
 
-        self.update_totem_locations(report)
+        # self.update_totem_locations(report)
 
         self.self_info = PlayerInfo(report['nextPlayerObject'])
         if bool(report['otherPlayerObject']):
@@ -58,6 +58,8 @@ class GameState(object):
     def update_totem_locations(self, report):
         for y, row in enumerate(self.map.tiles):
             for x, tile in enumerate(row):
+                if not bool(tile):
+                    continue
                 # if (x, y) in self.totem_locations.values():
                 if "tileType" in tile and tile["tileType"] is "DIGTILE" and tile["dug"] is True:
                     part_id = tile["part"].get("id", None)
@@ -77,3 +79,10 @@ class GameState(object):
         if "tradeCenter" in report and "partsTC" in report["tradeCenter"]:
             for part in report["tradeCenter"]["partsTC"]:
                 self.totem_locations[part["id"]] = "Shop"
+
+        for part in self.self_info.player_info["parts"]:
+            self.totem_locations[part["id"]] = "Self"
+
+        if bool(self.other_info.player_info):
+            for part in self.other_info.player_info["parts"]:
+                self.totem_locations[part["id"]] = "Other"
