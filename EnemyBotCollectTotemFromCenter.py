@@ -12,7 +12,10 @@ class EnemyBotCollectTotemFromCenter(BotStateMachine):
         curr_tile = current_game_state.map.tiles[self_info.y][self_info.x]
 
         if bot_state == 'initial':
-            goal = (7, 7)
+            if current_game_state.self_info.player_info['initX'] == 0:
+                goal = (7, 7)
+            else:
+                goal = (17, 17)
 
             if goal[0] == self_info.x and goal[1] == self_info.y:
                 return 'first_dig', actions.down()

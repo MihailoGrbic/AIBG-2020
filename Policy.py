@@ -159,5 +159,5 @@ class PolicyNoProgress(Policy):
                 positions[pos] = 0
             positions[pos] += 1
 
-        return len(positions) <= 3
+        return len(current_game_state.internal_bot_state['lru_positions']) == 10 and len(positions) <= 3
 

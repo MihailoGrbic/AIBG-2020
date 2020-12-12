@@ -81,12 +81,20 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
     # Add the start node
     open_list.append(start_node)
 
+    iter = 0
+
     # Loop until you find the end
     while len(open_list) > 0:
+
+        iter += 1
+        if iter == 7865:
+            return None
+        print(iter)
 
         # Get the current node
         current_node = open_list[0]
         current_index = 0
+        print(len(open_list))
         for index, item in enumerate(open_list):
             if item.f < current_node.f:
                 current_node = item
