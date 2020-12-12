@@ -7,13 +7,29 @@ import actions
 from typing import List
 import random
 
+dir_to_diff = {
+    actions.up(): (0, -1),
+    actions.down(): (0, 1),
+    actions.left(): (-1, 0),
+    actions.right(): (1, 0)
+}
 
-def dist(pos1, pos2):
+
+def dist(pos1: tuple, pos2: tuple) -> int:
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
 
-def move_available(current_map: Map, other_player: PlayerInfo, x, y, damage_tolerant = False, sandtrap_tolerant = False):
+def add_vector(vec1: tuple, vec2: tuple) -> tuple:
+    return vec1[0] + vec2[0], vec1[1] + vec2[1]
+
+
+def sub_vector(vec1: tuple, vec2: tuple) -> tuple:
+    return vec1[0] - vec2[0], vec1[1] - vec2[1]
+
+
+def move_available(current_map: Map, other_player: PlayerInfo, pos, damage_tolerant = False, sandtrap_tolerant = False):
     # TODO: Check how we store unpassable data
+    x, y = pos
     if 0 <= x < current_map.width and 0 <= y < current_map.height:
         blocked = 'tileType' in current_map.tiles[y][x] and current_map.tiles[y][x]['tileType'] == 'BLOCKTILE'
         player_trap = not damage_tolerant and 'is_trap' in current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'PLAYERTRAP'
@@ -25,7 +41,7 @@ def move_available(current_map: Map, other_player: PlayerInfo, x, y, damage_tole
 
 def can_move(current_map: Map, other_player: PlayerInfo, self_pos):
     for diff in [(-1, 0), (1, 0), (0, 1), (0, -1)]:
-        if move_available(current_map, other_player, self_pos[0], self_pos[1]):
+        if move_available(current_map, other_player, add_vector(self_pos, diff)):
             return True
     return False
 
@@ -93,7 +109,7 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
             node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
             # Make sure walkable terrain
-            if not move_available(maze, other_player, node_position[0], node_position[1]) and node_position != end:
+            if not move_available(maze, other_player, node_position) and node_position != end:
                 continue
 
             # Create new node
@@ -163,17 +179,6 @@ def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x
     return path_wasd
 
 
-def direction(pos1: tuple, pos2: tuple) -> str:
-    if pos1[1] == pos2[1] - 1:
-        return actions.up()
-    if pos1[0] == pos2[0] - 1:
-        return actions.left()
-    if pos1[1] == pos2[1] + 1:
-        return actions.down()
-    if pos1[0] == pos2[0] + 1:
-        return actions.right()
-
-
 def get_all_non_digged(map: Map, currpos):
     tiles = []
     for x in range(map.width):
@@ -237,3 +242,17 @@ def within_bounds(map: Map, pos: (int, int)):
 
 def random_movement_action():
     random.choice([actions.up(), actions.down(), actions.left(), actions.right()])
+
+
+def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: list, start: tuple) -> tuple:
+    dist_map = [[-1 for j in map.size] for i in map.size]
+    undiscovered = [start]
+    while len(undiscovered) > 0:
+        current = undiscovered[0]
+        undiscovered.remove(0)
+        for direction in actions.move_actions:
+            target = add_vector(current, dir_to_diff[direction])
+            if target in undiscovered:
+                return target
+            if move_available(map, other_info, target):
+                undiscovered.append(direction)
