@@ -2,7 +2,6 @@ from PlayerInfo import PlayerInfo
 from Map import Map
 from PlayerInfo import PlayerInfo
 from pprint import pprint
-from GameState import GameState
 import actions
 from typing import List
 import random
@@ -146,7 +145,7 @@ def astar(maze: Map, other_player: PlayerInfo, start, end):
             open_list.append(child)
 
 
-def move_once(current_game_state: GameState, target):
+def move_once(current_game_state, target):
     self_info = current_game_state.self_info.player_info
     path = astar(current_game_state.map, current_game_state.other_info, (self_info['x'], self_info['y']), target)
     print(path)
@@ -287,7 +286,7 @@ def get_symetric_pos(map: Map, pos: (int, int)):
     return (map.width - pos[0] - 1, map.height - pos[1] - 1)
 
 
-def explore(current_game_state: GameState, pos: PlayerInfo):
+def explore(current_game_state, pos: PlayerInfo):
     sol = get_discovery_tiles_per_direction(current_game_state.map, pos)
     print(sol)
     allactions = [actions.up(), actions.down(), actions.left(), actions.right()]

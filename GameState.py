@@ -59,15 +59,16 @@ class GameState(object):
         for y, row in enumerate(self.map.tiles):
             for x, tile in enumerate(row):
                 # if (x, y) in self.totem_locations.values():
-                if tile["tileType"] is "DIGTILE" and tile["dug"] is True:
+                if "tileType" in tile and tile["tileType"] is "DIGTILE" and tile["dug"] is True:
                     part_id = tile["part"].get("id", None)
                     for found_part, pos in self.totem_locations.items():
                         if found_part != part_id:
                             self.totem_locations[found_part] = pos
                             self.totem_locations[part_id] = "Moved"
 
-                if "part" in tile and "id" in tile["part"]:
+                if "part" in tile and tile["part"] is not None and "id" in tile["part"]:
                     totem_id = tile["part"]["id"]
+                    print(self.totem_locations)
                     self.totem_locations[totem_id] = (tile["x"], tile["y"])
                     diff = 1 if totem_id % 2 == 1 else -1
                     if self.totem_locations[totem_id + diff] is None:
