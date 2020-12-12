@@ -196,7 +196,7 @@ def get_all_undiscovered_tiles(map: Map):
     tiles = []
     for x in range(map.size):
         for y in range(map.size):
-            if not bool(map.tiles[y][x]):
+            if not map.tiles[y][x]:
                 tiles.append((x, y))
     return tiles
 
