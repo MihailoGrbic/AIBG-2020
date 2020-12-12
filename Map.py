@@ -6,15 +6,15 @@ class Map(object):
         self.height = res['height']
         self.tiles = res['tiles']
 
-        self.tiles[11][11] = {'x': 11, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[12][11] = {'x': 11, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[13][11] = {'x': 11, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[11][12] = {'x': 12, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[12][12] = {'x': 12, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[13][12] = {'x': 12, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[11][13] = {'x': 13, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[12][13] = {'x': 13, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True}
-        self.tiles[13][13] = {'x': 13, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[11][11] = {'x': 11, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[12][11] = {'x': 11, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[13][11] = {'x': 11, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[11][12] = {'x': 12, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[12][12] = {'x': 12, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[13][12] = {'x': 12, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[11][13] = {'x': 13, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[12][13] = {'x': 13, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
+        self.tiles[13][13] = {'x': 13, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True, "DISCOVERED": True}
 
         self.items = []
 
@@ -27,9 +27,14 @@ class Map(object):
         return self.tiles[y][x]
 
     def update_tile(self, tile):
+        tile["DISCOVERED"] = True
         for key in tile.keys():
             self.tiles[tile['y']][tile['x']][key] = tile[key]
+            if key is "trap" and tile["trap"]["visible"] is True:
+                self.tiles[tile['y']][tile['x']]["is_trap"] = tile['trap']['trapType']
 
-    def mark_trap(self, x, y, trap_type):
-        self.tiles[y][x].__setitem__('is_trap', True)  # ['is_trap'] = True
-        self.tiles[y][x]['trap_type'] = trap_type
+    def update_tile_reverse(self, x, y, tile):
+        tile["DISCOVERED"] = True
+        self.tiles[y][x]["tileType"] = tile["tileType"]
+        if "trap" in tile.keys() and tile["trap"] is not None and tile["trap"]["visible"] is True:
+            self.tiles[y][x]["is_trap"] = tile['trap']['trapType']
