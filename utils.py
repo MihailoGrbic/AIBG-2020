@@ -184,12 +184,16 @@ def find_path_to(player: PlayerInfo, other_info: PlayerInfo, current_map: Map, x
     return path_wasd
 
 
-def get_all_non_digged(map: Map, currpos):
+def get_all_non_digged(map: Map, currpos: (int, int)):
     tiles = []
     for x in range(map.width):
         for y in range(map.height):
-            if 'tileType' in map.tiles[y][x] \
-                    and map.tiles[y][x]['tileType'] == "DIGTILE":
+            currtile = map.tiles[y][x]
+            if 'tileType' in currtile \
+                    and currtile['tileType'] == "DIGTILE" \
+                    and ('dug' not in currtile
+                         or not currtile["dug"]
+                         or currtile['part'] is not None):
                 tiles.append((x, y))
 
     tiles = sorted(tiles, key=lambda digtile: dist((currpos[0], currpos[1]), digtile))
@@ -226,7 +230,6 @@ def get_discovery_tiles_per_direction(map: Map, curr_pos: PlayerInfo) -> dict:
 
 def calc_new_tiles(map: Map, pos: (int, int)):
     # calculates all new tiles that will be discovered if player mozes to pos
-    # TODO: PlayerInfo({}) should be fixed
     if not move_available(map, PlayerInfo({}), pos):
         return -1
 
@@ -252,15 +255,18 @@ def random_movement_action():
 
 def find_closest_undiscovered(map: Map, other_info: PlayerInfo, undiscovered: list, start: tuple) -> tuple:
     reached = [start]
+    processed = set()
     while len(reached) > 0:
         current = reached[0]
         reached.remove(current)
+        processed.add(current)
         for direction in actions.move_actions:
-            target = add_vector(current, dir_to_diff[direction])
+            diff = dir_to_diff[direction]
+            target = add_vector(current, diff)
             if target in undiscovered:
                 return target
-            if move_available(map, other_info, target):
-                reached.append(direction)
+            if target not in processed and move_available(map, other_info, target):
+                reached.append(target)
 
 
 def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
@@ -279,3 +285,22 @@ def get_next_action_towards(maze: Map, other_player: PlayerInfo, start, end):
 
 def get_symetric_pos(map: Map, pos: (int, int)):
     return (map.width - pos[0] - 1, map.height - pos[1] - 1)
+
+
+def explore(current_game_state: GameState, pos: PlayerInfo):
+    sol = get_discovery_tiles_per_direction(current_game_state.map, pos)
+    print(sol)
+    allactions = [actions.up(), actions.down(), actions.left(), actions.right()]
+    max_ = max([sol[action] for action in allactions])
+    only_max_actions = [action for action in allactions if sol[action] == max_]
+    max_dir_action = random.choice(only_max_actions)
+
+    if max_ == 0:
+        closest_undiscovered = find_closest_undiscovered(
+            current_game_state.map,
+            PlayerInfo({}),
+            get_all_undiscovered_tiles(current_game_state.map),
+            (pos.x, pos.y))
+        return move_once(current_game_state, closest_undiscovered)
+    else:
+        return max_dir_action

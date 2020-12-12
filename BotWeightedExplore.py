@@ -18,7 +18,7 @@ class BotWeightedExplore(Bot):
     def central_distance_scoring(pos: tuple) -> int:
         diff = sub_vector((12, 12), pos)
         # return 1
-        return 50 - abs(diff[0]) - abs(diff[1])
+        return 2 ** (50 - abs(diff[0]) - abs(diff[1]))
 
     def play_single_turn(self, current_game_state: GameState):
         for j, row in enumerate(current_game_state.map.tiles):
@@ -53,10 +53,14 @@ class BotWeightedExplore(Bot):
         # TODO: update vision when possible
         vision_radius = 3
         solution = dict()
-        solution[actions.up()] = self.calc_unknown_tile_scores(current_map, (current_pos.x, current_pos.y - 1), vision_radius)
-        solution[actions.down()] = self.calc_unknown_tile_scores(current_map, (current_pos.x, current_pos.y + 1), vision_radius)
-        solution[actions.left()] = self.calc_unknown_tile_scores(current_map, (current_pos.x - 1, current_pos.y), vision_radius)
-        solution[actions.right()] = self.calc_unknown_tile_scores(current_map, (current_pos.x + 1, current_pos.y), vision_radius)
+        solution[actions.up()] = self.calc_unknown_tile_scores(current_map, (current_pos.x, current_pos.y - 1),
+                                                               vision_radius)
+        solution[actions.down()] = self.calc_unknown_tile_scores(current_map, (current_pos.x, current_pos.y + 1),
+                                                                 vision_radius)
+        solution[actions.left()] = self.calc_unknown_tile_scores(current_map, (current_pos.x - 1, current_pos.y),
+                                                                 vision_radius)
+        solution[actions.right()] = self.calc_unknown_tile_scores(current_map, (current_pos.x + 1, current_pos.y),
+                                                                  vision_radius)
         print(solution)
         return solution
 
@@ -70,4 +74,3 @@ class BotWeightedExplore(Bot):
                 if within_bounds(current_map, (x, y)) and not current_map.tiles[y][x].get("DISCOVERED", False):
                     score += self.positional_scoring((x, y))
         return score
-
