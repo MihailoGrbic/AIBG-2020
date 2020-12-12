@@ -11,17 +11,16 @@ import random
 def dist(pos1, pos2):
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
-def tile_safe(current_map: Map, x, y, damage_tolerant = False, sandtrap_tolerant = False):
-    #Cekamo Soskica
-    return True
 
-def move_available(current_map: Map, other_player: PlayerInfo, x, y):
+def move_available(current_map: Map, other_player: PlayerInfo, x, y, damage_tolerant = False, sandtrap_tolerant = False):
     # TODO: Check how we store unpassable data
     if 0 <= x < current_map.width and 0 <= y < current_map.height:
         blocked = 'tileType' in current_map.tiles[y][x] and current_map.tiles[y][x]['tileType'] == 'BLOCKTILE'
-        trap = 'is_trap' in  current_map.tiles[y][x]
+        player_trap = not damage_tolerant and 'is_trap' in current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'PLAYERTRAP'
+        posion_trap = not damage_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'SCORPION'
+        sand_trap = not sandtrap_tolerant and 'is_trap' in  current_map.tiles[y][x] and current_map.tiles[y][x].trap_type == 'QUICKSAND'
         other_player_there = other_player.x != -1 and (other_player.x == x and other_player.y == y)
-        return not blocked and not other_player_there
+        return not blocked and not other_player_there and not player_trap and not posion_trap and sand_trap
 
 
 def can_move(current_map: Map, other_player: PlayerInfo, self_pos):

@@ -19,13 +19,13 @@ class BotBodyBlock(Bot):
         above_target = [enemy_y - 1, enemy_x, 0]
         bellow_target = [enemy_y + 1, enemy_x, 0]
 
-        while not tile_safe(current_game_state.map, left_target[1], left_target[0]):
+        while not move_available(current_game_state.map, current_game_state.other_player, left_target[1], left_target[0]):
             left_target[1] -= 1
-        while not tile_safe(current_game_state.map, right_target[1], right_target[0]):
+        while not move_available(current_game_state.map, current_game_state.other_player, right_target[1], right_target[0]):
             right_target[1] += 1
-        while not tile_safe(current_game_state.map, above_target[1], above_target[0]):
+        while not move_available(current_game_state.map, current_game_state.other_player, above_target[1], above_target[0]):
             above_target[0] -= 1
-        while not tile_safe(current_game_state.map, bellow_target[1], bellow_target[0]):
+        while not move_available(current_game_state.map, current_game_state.other_player, bellow_target[1], bellow_target[0]):
             bellow_target[0] += 1          
 
         for tile in self.blocked_tiles:
