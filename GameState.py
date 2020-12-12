@@ -14,7 +14,6 @@ class GameState(object):
         self.opponent_visible = False
         self.internal_bot_state = {}
 
-
     def update_game_state(self, report):
 
         self.self_info = PlayerInfo(report['nextPlayerObject'])
@@ -25,13 +24,12 @@ class GameState(object):
             y = self.other_info.y
             r_x, r_y = self.map.reverse_corr(x, y)
             if self.other_info.player_info['scorpionPoison']:
-
-                self.map.mark_trap(x, y,'SCORPION')
-                self.map.mark_trap(r_x, r_y,'SCORPION')
+                self.map.mark_trap(x, y, 'SCORPION')
+                self.map.mark_trap(r_x, r_y, 'SCORPION')
 
             if self.other_info.player_info['trappedInQuickSand']:
-                self.map.mark_trap(x, y,'QUICKSAND')
-                self.map.mark_trap(r_x, r_y,'QUICKSAND')
+                self.map.mark_trap(x, y, 'QUICKSAND')
+                self.map.mark_trap(r_x, r_y, 'QUICKSAND')
 
         else:
             self.opponent_visible = False
@@ -41,10 +39,6 @@ class GameState(object):
                 if bool(tile):
                     x = tile['x']
                     y = tile['y']
+                    r_x, r_y = self.map.reverse_corr(x, y)
                     self.map.update_tile(tile)
-
-                    if 'trap' in tile and bool(tile['trap']):
-                        if tile['trap']['visible']:
-                            r_x, r_y = self.map.reverse_corr(x, y)
-                            self.map.mark_trap(x,y,tile['trap']['trapType'])
-                            self.map.mark_trap(r_x,r_y,tile['trap']['trapType'])
+                    self.map.update_tile_reverse(r_x, r_y, tile)

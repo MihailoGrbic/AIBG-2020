@@ -27,9 +27,14 @@ class Map(object):
         return self.tiles[y][x]
 
     def update_tile(self, tile):
+        tile["DISCOVERED"] = True
         for key in tile.keys():
             self.tiles[tile['y']][tile['x']][key] = tile[key]
+            if key is "trap" and tile["trap"]["visible"] is True:
+                self.tiles[tile['y']][tile['x']]["is_trap"] = tile['trap']['trapType']
 
-    def mark_trap(self, x, y, trap_type):
-        self.tiles[y][x].__setitem__('is_trap', True)  # ['is_trap'] = True
-        self.tiles[y][x]['trap_type'] = trap_type
+    def update_tile_reverse(self, x, y, tile):
+        tile["DISCOVERED"] = True
+        self.tiles[y][x]["tileType"] = tile["tileType"]
+        if "trap" in tile.keys() and tile["trap"]["visible"] is True:
+            self.tiles[y][x]["is_trap"] = tile['trap']['trapType']
