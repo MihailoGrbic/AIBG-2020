@@ -6,7 +6,7 @@ class Tile:
         self.y = tile.get('y', -1)
         self.blocked = tile.get('x', False)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str):
         return self.tile[item]
 
     def __setitem__(self, key, value):
@@ -15,9 +15,11 @@ class Tile:
             self.x = value
         if key == "y":
             self.y = value
+        if key == "BLOCKTILE":
+            self.blocked = True
 
 
-def create_tile_map(res_tiles):
+def create_tile_map(res_tiles) -> list:
     tiles = []
     for row in res_tiles:
         tiles.append([])
@@ -34,15 +36,15 @@ class Map(object):
         self.height = res['height']
         self.tiles = create_tile_map(res['tiles'])
 
-        self.tiles[11][11] = {'x':11, 'y':11, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[12][11] = {'x':11, 'y':12, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[13][11] = {'x':11, 'y':13, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[11][12] = {'x':12, 'y':11, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[12][12] = {'x':12, 'y':12, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[13][12] = {'x':12, 'y':13, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[11][13] = {'x':13, 'y':11, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[12][13] = {'x':13, 'y':12, 'tileType':'BLOCKTILE', 'shop':True}
-        self.tiles[13][13] = {'x':13, 'y':13, 'tileType':'BLOCKTILE', 'shop':True}
+        self.tiles[11][11] = {'x': 11, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[12][11] = {'x': 11, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[13][11] = {'x': 11, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[11][12] = {'x': 12, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[12][12] = {'x': 12, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[13][12] = {'x': 12, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[11][13] = {'x': 13, 'y': 11, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[12][13] = {'x': 13, 'y': 12, 'tileType': 'BLOCKTILE', 'shop': True}
+        self.tiles[13][13] = {'x': 13, 'y': 13, 'tileType': 'BLOCKTILE', 'shop': True}
 
         self.items = []
 
@@ -51,13 +53,13 @@ class Map(object):
         r_y = self.height - y - 1
         return r_x, r_y
 
-    def get_tile(self, x, y):
+    def get_tile(self, x, y) -> Tile:
         return self.tiles[y][x]
 
     def update_tile(self, tile):
         for key in tile.keys():
-            self.map[tile['y']][tile['x']][key] = tile[key]
+            self.tiles[tile['y']][tile['x']][key] = tile[key]
 
     def mark_trap(self, x, y, trap_type):
-        self.tiles[tile['y']][tile['x']]['is_trap'] = True
-        self.tile[tile['y']][tile['x']]['trap_type'] = trap_type
+        self.tiles[y][x]['is_trap'] = True
+        self.tiles[y][x]['trap_type'] = trap_type
