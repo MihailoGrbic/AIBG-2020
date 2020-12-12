@@ -29,7 +29,7 @@ class GameState(object):
             x = self.other_info.x
             y = self.other_info.y
             r_x, r_y = self.map.reverse_corr(x, y)
-            if self.other_info.player_info['scorpionPoison']:
+            if self.other_info.player_info['scorpionPoison'] and self.other_info.player_info['durationScorpionPoison'] == 3:
                 self.map.mark_trap(x, y, 'SCORPION')
                 self.map.mark_trap(r_x, r_y, 'SCORPION')
 
